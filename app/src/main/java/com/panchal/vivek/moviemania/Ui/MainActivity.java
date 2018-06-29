@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.recylerView)RecyclerView recyclerView;
     MovieAdapter adapter;
 
-    private final static String API_KEY = "d411ae8547a5999d5d617464c27bced9";
+    private final static String API_KEY = " enter your Api key";
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
