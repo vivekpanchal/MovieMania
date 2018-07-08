@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     MovieAdapter adapter;
     private List<Movie> movieList;
 
-    private final static String API_KEY = "Insert your key";
+    private final static String API_KEY = "d411ae8547a5999d5d617464c27bced9";
     private MovieDatabase movieDatabase;
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -123,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
                 movieList.add(result);
             }
+            adapter=new MovieAdapter(this,movieList);
         adapter.notifyDataSetChanged();
         }
 

@@ -79,7 +79,7 @@ public class DetailActivity extends AppCompatActivity {
         favbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               for (int i=0;i<=moviesInDatabaseList.size();i++){
+               for (int i=1;i<=moviesInDatabaseList.size();i++){
 
                    if (moviesInDatabaseList.get(i).getId().equals(movie.getId())){
                        movieDatabase.moviesDao().deleteMovies(movie);

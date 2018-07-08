@@ -28,6 +28,7 @@ public abstract class MovieDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     //create Database
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(), MovieDatabase.class, DATABASE_NAME)
+                            .allowMainThreadQueries()
                             .build();
                 }
             }
