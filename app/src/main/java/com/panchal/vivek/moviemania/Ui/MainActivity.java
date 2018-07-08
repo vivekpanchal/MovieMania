@@ -12,10 +12,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.panchal.vivek.moviemania.Adapter.MovieAdapter;
+import com.panchal.vivek.moviemania.Database.MovieDatabase;
 import com.panchal.vivek.moviemania.Model.Movie;
 import com.panchal.vivek.moviemania.Model.MovieResponse;
 import com.panchal.vivek.moviemania.Networking.ApiClient;
@@ -31,11 +31,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
-    @BindView(R.id.recylerView)RecyclerView recyclerView;
+    @BindView(R.id.recylerView)
+    RecyclerView recyclerView;
     MovieAdapter adapter;
+    private List<Movie> movieList;
 
-    private final static String API_KEY = " enter your Api key";
-
+    private final static String API_KEY = "Insert your key";
+    private MovieDatabase movieDatabase;
     private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
@@ -47,8 +49,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void intView() {
-        Toolbar toolbar=findViewById(R.id.my_toolbar);
+        Toolbar toolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
+        movieDatabase=MovieDatabase.getDatabase(getApplicationContext());
         Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_sort);
         toolbar.setOverflowIcon(drawable);
         ButterKnife.bind(this);
@@ -80,9 +83,10 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             }
+
             @Override
             public void onFailure(Call<MovieResponse> call, Throwable t) {
-                Toast.makeText(MainActivity.this,"Oops No connection",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Oops No connection", Toast.LENGTH_SHORT).show();
                 Log.e(TAG, t.toString());
 
             }
@@ -102,6 +106,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void loadFavMovie() {
+        if(movieList != null){
+            movieList.clear();
+        }
+
+        for (int i = 0; i < movieDatabase.moviesDao().getAllMovies().size(); i++) {
+                Movie result = new Movie(movieDatabase.moviesDao().getAllMovies().get(i).getId(),
+                        movieDatabase.moviesDao().getAllMovies().get(i).getTitle(),
+                        movieDatabase.moviesDao().getAllMovies().get(i).getOverview(),
+                        movieDatabase.moviesDao().getAllMovies().get(i).getPosterPath(),
+                        movieDatabase.moviesDao().getAllMovies().get(i).getRating(),
+                        movieDatabase.moviesDao().getAllMovies().get(i).getReleaseDate(),
+                        movieDatabase.moviesDao().getAllMovies().get(i).getBackdropPath(),
+                        movieDatabase.moviesDao().getAllMovies().get(i).getFavourite());
+
+                movieList.add(result);
+            }
+        adapter.notifyDataSetChanged();
+        }
+
+
+
+
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
@@ -117,6 +146,10 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.popular:
                 loadPopularMovies();
+                return true;
+
+            case R.id.favourite:
+                loadFavMovie();
                 return true;
 
             default:

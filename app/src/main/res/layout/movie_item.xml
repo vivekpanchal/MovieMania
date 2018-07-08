@@ -4,10 +4,17 @@
     style="@style/CardView_style"
     android:id="@+id/image_item_card"
     app:cardCornerRadius="5dp">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="@dimen/cardview_compat_inset_shadow"
+    >
 
     <ImageView
         android:id="@+id/movie_img"
         style="@style/Movie_Item"
         app:srcCompat="@drawable/ic_launcher_background" />
+
+</RelativeLayout>
 
 </android.support.v7.widget.CardView>

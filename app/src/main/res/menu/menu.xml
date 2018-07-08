@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/popular"
-        android:title="PopularMovies"
-        />
+        android:title="PopularMovies" />
     <item
         android:id="@+id/top_rated"
         android:title="Top Rated" />
+
+    <item
+        android:id="@+id/favourite"
+        android:icon="@drawable/ic_fav1"
+        android:title="favourite"
+         />
 </menu>

@@ -1,4 +1,33 @@
 package com.panchal.vivek.moviemania.Database;
 
-public class MoviesDao {
+import android.arch.lifecycle.LiveData;
+import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
+import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
+
+import com.panchal.vivek.moviemania.Model.Movie;
+
+import java.util.List;
+
+@Dao
+public interface MoviesDao{
+
+    @Query("SELECT * FROM movies")
+    List<Movie> getAllMovies();
+
+    @Query("SELECT * FROM movies WHERE id = :id")
+    List<Movie> getMovies(String id);
+
+    @Insert
+    void insertMovie(Movie... movie);
+
+    @Update
+    void updateMovie(Movie movie);
+
+    @Delete
+    void deleteMovies(Movie movie);
+
+
 }
