@@ -123,8 +123,9 @@ public class MainActivity extends AppCompatActivity {
 
                 movieList.add(result);
             }
-            adapter=new MovieAdapter(this,movieList);
-        adapter.notifyDataSetChanged();
+            adapter=new MovieAdapter(MainActivity.this,movieList);
+            adapter.notifyDataSetChanged();
+            recyclerView.setAdapter(adapter);
         }
 
 
