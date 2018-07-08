@@ -37,6 +37,8 @@ public class Movie implements Parcelable {
     @Expose
     private String posterPath;
 
+
+
     @ColumnInfo(name = "backdrop_path")
     @SerializedName("backdrop_path")
     @Expose
@@ -108,11 +110,11 @@ public class Movie implements Parcelable {
     }
 
     public String getPosterPath() {
-        return posterPath;
+        return "http://image.tmdb.org/t/p/w500/"+posterPath;
     }
 
     public String getBackdropPath() {
-        return backdropPath;
+        return "http://image.tmdb.org/t/p/w780/"+backdropPath;
     }
 
     public String getOverview() {
