@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     MovieAdapter adapter;
     private List<Movie> movieList;
 
-    private final static String API_KEY = "d411ae8547a5999d5d617464c27bced9";
+    private final static String API_KEY = " api key ";
     private MovieDatabase movieDatabase;
     private static final String TAG = MainActivity.class.getSimpleName();
 
