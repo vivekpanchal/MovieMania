@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.panchal.vivek.moviemania.Adapter.MovieAdapter;
+import com.panchal.vivek.moviemania.BuildConfig;
 import com.panchal.vivek.moviemania.Database.MovieDatabase;
 import com.panchal.vivek.moviemania.Model.Movie;
 import com.panchal.vivek.moviemania.Model.MovieResponse;
@@ -35,8 +36,8 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     MovieAdapter adapter;
     private List<Movie> movieList;
-
-    private final static String API_KEY = " api key ";
+    ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+    private final static String API_KEY =BuildConfig.API_KEY;
     private MovieDatabase movieDatabase;
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -51,19 +52,14 @@ public class MainActivity extends AppCompatActivity {
     private void intView() {
         Toolbar toolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
-        movieDatabase=MovieDatabase.getDatabase(getApplicationContext());
+        movieDatabase = MovieDatabase.getDatabase(getApplicationContext());
         Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_sort);
         toolbar.setOverflowIcon(drawable);
         ButterKnife.bind(this);
 
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            recyclerView.setLayoutManager(new GridLayoutManager(this, 4));
-            recyclerView.setAdapter(adapter);
-        } else {
-            recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-            recyclerView.setAdapter(adapter);
-
-        }
+        final int spanCount = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 4 : 2;
+        GridLayoutManager layoutManager = new GridLayoutManager(this, spanCount);
+        recyclerView.setLayoutManager(layoutManager);
 
     }
 
@@ -94,43 +90,38 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loadPopularMovies() {
-        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         Call<MovieResponse> call = apiInterface.getPopularMovies(API_KEY);
         fetchData(call);
     }
 
     public void loadTopRatedMovies() {
-        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         Call<MovieResponse> call = apiInterface.getTopRatedMovies(API_KEY);
         fetchData(call);
     }
 
 
     public void loadFavMovie() {
-        if(movieList != null){
+        if (movieList != null) {
             movieList.clear();
         }
 
         for (int i = 0; i < movieDatabase.moviesDao().getAllMovies().size(); i++) {
-                Movie result = new Movie(movieDatabase.moviesDao().getAllMovies().get(i).getId(),
-                        movieDatabase.moviesDao().getAllMovies().get(i).getTitle(),
-                        movieDatabase.moviesDao().getAllMovies().get(i).getOverview(),
-                        movieDatabase.moviesDao().getAllMovies().get(i).getPosterPath(),
-                        movieDatabase.moviesDao().getAllMovies().get(i).getRating(),
-                        movieDatabase.moviesDao().getAllMovies().get(i).getReleaseDate(),
-                        movieDatabase.moviesDao().getAllMovies().get(i).getBackdropPath(),
-                        movieDatabase.moviesDao().getAllMovies().get(i).getFavourite());
+            Movie result = new Movie(movieDatabase.moviesDao().getAllMovies().get(i).getId(),
+                    movieDatabase.moviesDao().getAllMovies().get(i).getTitle(),
+                    movieDatabase.moviesDao().getAllMovies().get(i).getOverview(),
+                    movieDatabase.moviesDao().getAllMovies().get(i).getPosterPath(),
+                    movieDatabase.moviesDao().getAllMovies().get(i).getRating(),
+                    movieDatabase.moviesDao().getAllMovies().get(i).getReleaseDate(),
+                    movieDatabase.moviesDao().getAllMovies().get(i).getBackdropPath(),
+                    movieDatabase.moviesDao().getAllMovies().get(i).getFavourite());
 
-                movieList.add(result);
-            }
-            adapter=new MovieAdapter(MainActivity.this,movieList);
-            adapter.notifyDataSetChanged();
-            recyclerView.setAdapter(adapter);
+            movieList.add(result);
         }
 
-
-
-
+        adapter.notifyDataSetChanged();
+        adapter = new MovieAdapter(this, movieList);
+        recyclerView.setAdapter(adapter);
+    }
 
 
     @Override

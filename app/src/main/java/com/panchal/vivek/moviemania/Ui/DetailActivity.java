@@ -79,21 +79,32 @@ public class DetailActivity extends AppCompatActivity {
         favbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               for (int i=1;i<=moviesInDatabaseList.size();i++){
+                int i = 0;
+                do {
+                    if (moviesInDatabaseList.size() == 0) {
+                        movieDatabase.moviesDao().insertMovie(movie);
+                        movie.setFavourite(true);
+                        Toast.makeText(DetailActivity.this, "ADDED to Favourite", Toast.LENGTH_SHORT).show();
+                        movieDatabase.moviesDao().updateMovie(movie);
+                        break;
+                    }
+                    if (moviesInDatabaseList.get(i).getId().equals(movie.getId())) {
+                        movieDatabase.moviesDao().deleteMovies(movie);
+                        movie.setFavourite(false);
+                        Toast.makeText(DetailActivity.this, "REMOVED from Favourite", Toast.LENGTH_SHORT).show();
+                        movieDatabase.moviesDao().updateMovie(movie);
+                        break;
+                    }
+                    if (i == moviesInDatabaseList.size() - 1) {
+                        movieDatabase.moviesDao().insertMovie(movie);
+                        movie.setFavourite(true);
+                        Toast.makeText(DetailActivity.this, "ADDED to Favourite", Toast.LENGTH_SHORT).show();
+                        movieDatabase.moviesDao().updateMovie(movie);
+                        break;
+                    }
 
-                   if (moviesInDatabaseList.get(i).getId().equals(movie.getId())){
-                       movieDatabase.moviesDao().deleteMovies(movie);
-                       movie.setFavourite(false);
-                       Toast.makeText(DetailActivity.this,"REMOVED from Favourite",Toast.LENGTH_SHORT).show();
-                       movieDatabase.moviesDao().updateMovie(movie);
-                   }else{
-                       movieDatabase.moviesDao().insertMovie(movie);
-                       movie.setFavourite(true);
-                       Toast.makeText(DetailActivity.this,"ADDED to Favourite",Toast.LENGTH_SHORT).show();
-                       movieDatabase.moviesDao().updateMovie(movie);
-                   }
-
-               }
+                    i++;
+                } while (i < moviesInDatabaseList.size());
             }
         });
     }

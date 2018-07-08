@@ -18,7 +18,7 @@ public interface MoviesDao{
     List<Movie> getAllMovies();
 
     @Query("SELECT * FROM movies WHERE id = :id")
-    List<Movie> getMovies(String id);
+    LiveData<List<Movie>> getMovies(String id);
 
     @Insert
     void insertMovie(Movie... movie);
