@@ -94,15 +94,13 @@ public class DetailActivity extends AppCompatActivity {
                         Toast.makeText(DetailActivity.this, "REMOVED from Favourite", Toast.LENGTH_SHORT).show();
                         movieDatabase.moviesDao().updateMovie(movie);
                         break;
-                    }
-                    if (i == moviesInDatabaseList.size() - 1) {
+                    } else if (!moviesInDatabaseList.get(i).getId().equals(movie_id)) {
                         movieDatabase.moviesDao().insertMovie(movie);
                         movie.setFavourite(true);
                         Toast.makeText(DetailActivity.this, "ADDED to Favourite", Toast.LENGTH_SHORT).show();
                         movieDatabase.moviesDao().updateMovie(movie);
                         break;
                     }
-
                     i++;
                 } while (i < moviesInDatabaseList.size());
             }

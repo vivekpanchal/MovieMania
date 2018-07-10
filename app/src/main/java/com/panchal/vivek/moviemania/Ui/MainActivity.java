@@ -23,6 +23,7 @@ import com.panchal.vivek.moviemania.Networking.ApiClient;
 import com.panchal.vivek.moviemania.Networking.ApiInterface;
 import com.panchal.vivek.moviemania.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         intView();
         loadPopularMovies();
+        movieList=new ArrayList<>();
     }
 
     private void intView() {
@@ -118,9 +120,10 @@ public class MainActivity extends AppCompatActivity {
             movieList.add(result);
         }
 
-        adapter.notifyDataSetChanged();
+
         adapter = new MovieAdapter(this, movieList);
         recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
 
