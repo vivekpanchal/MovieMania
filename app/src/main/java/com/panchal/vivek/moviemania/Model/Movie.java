@@ -16,6 +16,7 @@ import java.util.List;
 
 @Entity(tableName = "movies")
 public class Movie implements Parcelable {
+
     @PrimaryKey
     @ColumnInfo(name = "id")
     @SerializedName("id")
@@ -110,11 +111,11 @@ public class Movie implements Parcelable {
     }
 
     public String getPosterPath() {
-        return "http://image.tmdb.org/t/p/w500/"+posterPath;
+        return posterPath;
     }
 
     public String getBackdropPath() {
-        return "http://image.tmdb.org/t/p/w780/"+backdropPath;
+        return backdropPath;
     }
 
     public String getOverview() {

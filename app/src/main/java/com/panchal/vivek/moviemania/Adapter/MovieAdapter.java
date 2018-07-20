@@ -59,8 +59,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
-        Picasso.get().load(movies.get(position).getPosterPath()).into(holder.image_thumbnail);
+        String url = context.getResources().getString(R.string.poster_url)+ movies.get(position).getPosterPath();
 
+        Picasso.get().load(url).into(holder.image_thumbnail);
         holder.image_Card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

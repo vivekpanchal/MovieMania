@@ -67,9 +67,13 @@ public class DetailActivity extends AppCompatActivity {
         final String release_Date = movie.getReleaseDate();
         String plotsynopsis = movie.getOverview();
 
+
+        String backdrop_url=getResources().getString(R.string.backdrop_url)+movie_backdrop;
+        String poster_url=getResources().getString(R.string.poster_url)+movieposter;
+
         //setting the views
-        Picasso.get().load(movie_backdrop).into(movie_bckgrund);
-        Picasso.get().load(movieposter).into(movie_poster);
+        Picasso.get().load(backdrop_url).into(movie_bckgrund);
+        Picasso.get().load(poster_url).into(movie_poster);
 
         movie_title.setText(title);
         movie_releaseDate.setText(release_Date);

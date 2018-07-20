@@ -22,6 +22,7 @@ import com.panchal.vivek.moviemania.Model.MovieResponse;
 import com.panchal.vivek.moviemania.Networking.ApiClient;
 import com.panchal.vivek.moviemania.Networking.ApiInterface;
 import com.panchal.vivek.moviemania.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
