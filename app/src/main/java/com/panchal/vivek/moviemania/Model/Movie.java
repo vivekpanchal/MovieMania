@@ -4,6 +4,7 @@ package com.panchal.vivek.moviemania.Model;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -17,7 +18,8 @@ import java.util.List;
 @Entity(tableName = "movies")
 public class Movie implements Parcelable {
 
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
+    @OnConflictStrategy
     @ColumnInfo(name = "id")
     @SerializedName("id")
     @Expose

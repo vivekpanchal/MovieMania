@@ -1,4 +1,4 @@
-package com.panchal.vivek.moviemania.Ui;
+package com.panchal.vivek.moviemania;
 
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
@@ -11,18 +11,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.panchal.vivek.moviemania.Adapter.MovieAdapter;
-import com.panchal.vivek.moviemania.BuildConfig;
 import com.panchal.vivek.moviemania.Database.MovieDatabase;
 import com.panchal.vivek.moviemania.Model.Movie;
 import com.panchal.vivek.moviemania.Model.MovieResponse;
 import com.panchal.vivek.moviemania.Networking.ApiClient;
 import com.panchal.vivek.moviemania.Networking.ApiInterface;
-import com.panchal.vivek.moviemania.R;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;

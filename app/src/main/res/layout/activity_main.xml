@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/Parent_width_height"
-    tools:context=".Ui.MainActivity"
+    tools:context=".MainActivity"
     tools:layout_editor_absoluteY="25dp">
 
     <android.support.v7.widget.Toolbar

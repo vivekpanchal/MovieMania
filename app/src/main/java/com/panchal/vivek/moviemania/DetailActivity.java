@@ -1,4 +1,4 @@
-package com.panchal.vivek.moviemania.Ui;
+package com.panchal.vivek.moviemania;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,9 +6,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -16,16 +16,16 @@ import android.widget.Toast;
 
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.like.LikeButton;
-import com.like.OnLikeListener;
+import com.panchal.vivek.moviemania.Adapter.ReviewAdapter;
 import com.panchal.vivek.moviemania.Adapter.TrailerAdapter;
-import com.panchal.vivek.moviemania.BuildConfig;
 import com.panchal.vivek.moviemania.Database.MovieDatabase;
 import com.panchal.vivek.moviemania.Model.Movie;
+import com.panchal.vivek.moviemania.Model.ReviewResult;
+import com.panchal.vivek.moviemania.Model.Reviews;
 import com.panchal.vivek.moviemania.Model.Trailer;
 import com.panchal.vivek.moviemania.Model.TrailerResult;
 import com.panchal.vivek.moviemania.Networking.ApiClient;
 import com.panchal.vivek.moviemania.Networking.ApiInterface;
-import com.panchal.vivek.moviemania.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -40,7 +40,8 @@ import retrofit2.Response;
 public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.movie_backgrund)
     KenBurnsView movie_bckgrund;
-    //    @BindView(R.id.toolbar)Toolbar toolbar;
+    @BindView(R.id.toolbar_detail)
+    Toolbar toolbar;
     @BindView(R.id.movie_overview)
     TextView overView_text;
     @BindView(R.id.movie_poster)
@@ -52,30 +53,30 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.movie_rating)
     TextView movie_rating;
     @BindView(R.id.favbtn)
-    LikeButton favbtn;
+    LikeButton likeButton;
 
     @BindView(R.id.scroll_view)
     ScrollView view;
 
-
-    private Movie movie_obj;
+    private Movie movie;
     private MovieDatabase movieDatabase;
     private static List<Movie> moviesInDatabaseList;
-    private List<TrailerResult> results;
     ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
     private final static String API_KEY = BuildConfig.API_KEY;
     private static final String TAG = DetailActivity.class.getSimpleName();
 
     private RecyclerView recyclerView;
+    @BindView(R.id.review_recycle)
+    RecyclerView mReviewRecycler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
-//        setSupportActionBar(toolbar);
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
         recyclerView = findViewById(R.id.trailer_recyclerview);
-
 
         //instantiating database
         movieDatabase = MovieDatabase.getDatabase(getApplicationContext());
@@ -83,7 +84,7 @@ public class DetailActivity extends AppCompatActivity {
 
 
         Intent intent = getIntent();
-        final Movie movie = intent.getParcelableExtra("MovieList");
+        movie = intent.getParcelableExtra("MovieList");
         final int movie_id = movie.getId();
         final String movie_backdrop = movie.getBackdropPath();
         final String title = movie.getTitle();
@@ -107,49 +108,83 @@ public class DetailActivity extends AppCompatActivity {
 
 
         loadTrailer(String.valueOf(movie_id));
-        favbtn.setOnClickListener(new View.OnClickListener() {
+        loadReviews(String.valueOf(movie_id));
+
+        likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int i = 0;
-                do {
-                    if (moviesInDatabaseList.size() == 0) {
-                        movieDatabase.moviesDao().insertMovie(movie);
-                        movie.setFavourite(true);
-                        Snackbar snackbar=Snackbar.make(view,"Added to favourite",Snackbar.LENGTH_SHORT);
-                        snackbar.show();
-                        favbtn.setLiked(true);
-                        movieDatabase.moviesDao().updateMovie(movie);
-                        break;
-                    }if (movie.getId()!=null){
-                        if (moviesInDatabaseList.get(i).getId().equals(movie.getId())) {
-                            movieDatabase.moviesDao().deleteMovies(movie);
-                            movie.setFavourite(false);
-                            Snackbar snackbar=Snackbar.make(view,"Removed from favourite",Snackbar.LENGTH_SHORT);
-                            snackbar.show();
-                            favbtn.setLiked(false);
-                            movieDatabase.moviesDao().updateMovie(movie);
-                            break;
-                        } else if (!moviesInDatabaseList.get(i).getId().equals(movie_id)) {
-                            movieDatabase.moviesDao().insertMovie(movie);
-                            movie.setFavourite(true);
-                            Snackbar snackbar=Snackbar.make(view,"Added to favourite",Snackbar.LENGTH_SHORT);
-                            snackbar.show();
-                            favbtn.setLiked(true);
-                            movieDatabase.moviesDao().updateMovie(movie);
-                            break;
-                        }
-                    }
-
-                    i++;
-                } while (i < moviesInDatabaseList.size());
+                performDataQuery();
             }
         });
 
 
     }
 
+    private void loadReviews(String id) {
+        Call<Reviews> reviewsCall = apiInterface.getMovieReviews(id, API_KEY);
+        reviewsCall.enqueue(new Callback<Reviews>() {
+            @Override
+            public void onResponse(Call<Reviews> call, Response<Reviews> response) {
+                if (response.body() != null) {
+                    try {
+                        assert response.body() != null;
+                        List<ReviewResult> reviewResults = response.body().getResults();
+                        mReviewRecycler.setAdapter(new ReviewAdapter(DetailActivity.this, reviewResults));
+                        mReviewRecycler.setLayoutManager(new LinearLayoutManager(DetailActivity.this));
+                    } catch (NullPointerException e) {
+                        Log.d(TAG, "onResponse: null pointer Exception ");
+                    }
+                }
 
-    private void fetchTrailer(Call<Trailer> call) {
+            }
+
+            @Override
+            public void onFailure(Call<Reviews> call, Throwable t) {
+
+            }
+        });
+
+
+    }
+
+    void performDataQuery() {
+        int i = 0;
+        do {
+            if (moviesInDatabaseList.size() == 0) {
+                movieDatabase.moviesDao().insertMovie(movie);
+                movie.setFavourite(true);
+                Snackbar snackbar = Snackbar.make(view, "Added to favourite", Snackbar.LENGTH_SHORT);
+                snackbar.show();
+                likeButton.setLiked(true);
+                movieDatabase.moviesDao().updateMovie(movie);
+                break;
+            }
+            if (movie.getId() != null) {
+                if (moviesInDatabaseList.get(i).getId().equals(movie.getId())) {
+                    movieDatabase.moviesDao().deleteMovies(movie);
+                    movie.setFavourite(false);
+                    Snackbar snackbar = Snackbar.make(view, "Removed from favourite", Snackbar.LENGTH_SHORT);
+                    snackbar.show();
+                    likeButton.setLiked(false);
+                    movieDatabase.moviesDao().updateMovie(movie);
+                    break;
+                } else if (!moviesInDatabaseList.get(i).getId().equals(movie.getId())) {
+                    movieDatabase.moviesDao().insertMovie(movie);
+                    movie.setFavourite(true);
+                    Snackbar snackbar = Snackbar.make(view, "Added to favourite", Snackbar.LENGTH_SHORT);
+                    snackbar.show();
+                    likeButton.setLiked(true);
+                    movieDatabase.moviesDao().updateMovie(movie);
+                    break;
+                }
+            }
+
+            i++;
+        } while (i < moviesInDatabaseList.size());
+    }
+
+    private void loadTrailer(String id) {
+        Call<Trailer> call = apiInterface.getMovieTrailers(id, API_KEY);
         call.enqueue(new Callback<Trailer>() {
             @Override
             public void onResponse(Call<Trailer> call, Response<Trailer> response) {
@@ -158,7 +193,7 @@ public class DetailActivity extends AppCompatActivity {
                         assert response.body() != null;
                         List<TrailerResult> result = response.body().getResults();
                         recyclerView.setAdapter(new TrailerAdapter(DetailActivity.this, result));
-                        recyclerView.setLayoutManager(new LinearLayoutManager(DetailActivity.this,LinearLayoutManager.HORIZONTAL,false));
+                        recyclerView.setLayoutManager(new LinearLayoutManager(DetailActivity.this, LinearLayoutManager.HORIZONTAL, false));
                     } catch (NullPointerException e) {
                         Log.d(TAG, "onResponse: null pointer Exception ");
                     }
@@ -171,10 +206,5 @@ public class DetailActivity extends AppCompatActivity {
                 Log.e(TAG, t.toString());
             }
         });
-    }
-
-    private void loadTrailer(String id) {
-        Call<Trailer> call = apiInterface.getMovieTrailers(id, API_KEY);
-        fetchTrailer(call);
     }
 }

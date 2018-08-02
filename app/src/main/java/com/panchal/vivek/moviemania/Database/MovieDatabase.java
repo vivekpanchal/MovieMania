@@ -18,7 +18,7 @@ public abstract class MovieDatabase extends RoomDatabase {
     private static String TAG=MovieDatabase.class.getSimpleName();
 
     private static final Object LOCK = new Object();
-    private static final String DATABASE_NAME = "moviesDB1";
+    private static final String DATABASE_NAME = "moviesDB2";
     public abstract MoviesDao moviesDao();
     private static MovieDatabase INSTANCE;
 
