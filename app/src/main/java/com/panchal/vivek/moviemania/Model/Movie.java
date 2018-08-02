@@ -17,7 +17,7 @@ import java.util.List;
 @Entity(tableName = "movies")
 public class Movie implements Parcelable {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     @SerializedName("id")
     @Expose
