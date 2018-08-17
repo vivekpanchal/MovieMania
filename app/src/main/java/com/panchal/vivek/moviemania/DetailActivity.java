@@ -36,6 +36,7 @@ import com.panchal.vivek.moviemania.ViewModel.ViewModelFactory;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,6 +67,7 @@ public class DetailActivity extends AppCompatActivity {
     ScrollView view;
 
     private Movie movie;
+    private Movie movieobj;
     private MovieDatabase movieDatabase;
     private static List<Movie> moviesInDatabaseList;
     ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
@@ -126,7 +128,7 @@ public class DetailActivity extends AppCompatActivity {
         observer=new Observer<Movie>() {
             @Override
             public void onChanged(@Nullable Movie moviesResult) {
-                movie = moviesResult;
+                movieobj = moviesResult;
                 mainViewModel.getMoviesResults().removeObserver(this);
             }
         };
@@ -178,22 +180,17 @@ public class DetailActivity extends AppCompatActivity {
                 Snackbar snackbar = Snackbar.make(view, "Added to favourite", Snackbar.LENGTH_SHORT);
                 snackbar.show();
                 likeButton.setLiked(true);
-                if(mainViewModel.getMoviesResults().getValue() != null) {
-                    mainViewModel.getMoviesResults().getValue().setFavourite(true);
-                }
                 movieDatabase.moviesDao().updateMovie(movie);
                 break;
             }
-            if (movie.getId() != null) {
+            if (Objects.equals(movie.getId(),moviesInDatabaseList.get(i).getId())) {
                 if (moviesInDatabaseList.get(i).getId().equals(movie.getId())) {
                     movieDatabase.moviesDao().deleteMovies(movie);
                     movie.setFavourite(false);
                     Snackbar snackbar = Snackbar.make(view, "Removed from favourite", Snackbar.LENGTH_SHORT);
                     snackbar.show();
                     likeButton.setLiked(false);
-                    if(mainViewModel.getMoviesResults().getValue() != null) {
-                        mainViewModel.getMoviesResults().getValue().setFavourite(true);
-                    }
+
 
                     movieDatabase.moviesDao().updateMovie(movie);
                     break;
@@ -203,9 +200,7 @@ public class DetailActivity extends AppCompatActivity {
                     Snackbar snackbar = Snackbar.make(view, "Added to favourite", Snackbar.LENGTH_SHORT);
                     snackbar.show();
                     likeButton.setLiked(true);
-                    if(mainViewModel.getMoviesResults().getValue() != null) {
-                        mainViewModel.getMoviesResults().getValue().setFavourite(true);
-                    }
+
                     movieDatabase.moviesDao().updateMovie(movie);
                     break;
                 }
