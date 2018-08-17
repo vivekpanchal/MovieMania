@@ -1,9 +1,12 @@
 package com.panchal.vivek.moviemania;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -74,6 +77,7 @@ public class DetailActivity extends AppCompatActivity {
     RecyclerView mReviewRecycler;
     public static int movieId;
     MainViewModel mainViewModel;
+    Observer observer;
 
 
     @Override
@@ -87,8 +91,8 @@ public class DetailActivity extends AppCompatActivity {
 
         //instantiating database
         movieDatabase = MovieDatabase.getDatabase(getApplicationContext());
-        moviesInDatabaseList = movieDatabase.moviesDao().getMovies(String.valueOf(movieId));
-       mainViewModel = ViewModelProviders.of(this , new ViewModelFactory(movieDatabase , Integer.toString(movieId))).get(MainViewModel.class);
+        moviesInDatabaseList = movieDatabase.moviesDao().getAllMovies();
+        mainViewModel = ViewModelProviders.of(this , new ViewModelFactory(movieDatabase , Integer.toString(movieId))).get(MainViewModel.class);
 
 
         Intent intent = getIntent();
@@ -117,6 +121,16 @@ public class DetailActivity extends AppCompatActivity {
 
         loadTrailer(String.valueOf(movie_id));
         loadReviews(String.valueOf(movie_id));
+
+
+        observer=new Observer<Movie>() {
+            @Override
+            public void onChanged(@Nullable Movie moviesResult) {
+                movie = moviesResult;
+                mainViewModel.getMoviesResults().removeObserver(this);
+            }
+        };
+        mainViewModel.getMoviesResults().observe(DetailActivity.this, observer);
 
         likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,6 +178,9 @@ public class DetailActivity extends AppCompatActivity {
                 Snackbar snackbar = Snackbar.make(view, "Added to favourite", Snackbar.LENGTH_SHORT);
                 snackbar.show();
                 likeButton.setLiked(true);
+                if(mainViewModel.getMoviesResults().getValue() != null) {
+                    mainViewModel.getMoviesResults().getValue().setFavourite(true);
+                }
                 movieDatabase.moviesDao().updateMovie(movie);
                 break;
             }
@@ -174,6 +191,10 @@ public class DetailActivity extends AppCompatActivity {
                     Snackbar snackbar = Snackbar.make(view, "Removed from favourite", Snackbar.LENGTH_SHORT);
                     snackbar.show();
                     likeButton.setLiked(false);
+                    if(mainViewModel.getMoviesResults().getValue() != null) {
+                        mainViewModel.getMoviesResults().getValue().setFavourite(true);
+                    }
+
                     movieDatabase.moviesDao().updateMovie(movie);
                     break;
                 } else if (!moviesInDatabaseList.get(i).getId().equals(movie.getId())) {
@@ -182,6 +203,9 @@ public class DetailActivity extends AppCompatActivity {
                     Snackbar snackbar = Snackbar.make(view, "Added to favourite", Snackbar.LENGTH_SHORT);
                     snackbar.show();
                     likeButton.setLiked(true);
+                    if(mainViewModel.getMoviesResults().getValue() != null) {
+                        mainViewModel.getMoviesResults().getValue().setFavourite(true);
+                    }
                     movieDatabase.moviesDao().updateMovie(movie);
                     break;
                 }

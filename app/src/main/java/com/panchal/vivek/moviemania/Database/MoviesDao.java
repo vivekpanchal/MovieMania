@@ -16,7 +16,7 @@ import java.util.List;
 public interface MoviesDao {
 
     @Query("SELECT * FROM movies")
-    LiveData<List<Movie>> getAllMovies();
+    List<Movie> getAllMovies();
 
     @Query("SELECT * FROM movies WHERE id = :id")
     LiveData<Movie> getMovies(String id);

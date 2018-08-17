@@ -106,51 +106,22 @@ public class MainActivity extends AppCompatActivity {
             movieList.clear();
         }
 
-//        for (int i = 0; i < movieDatabase.moviesDao().getAllMovies().size(); i++) {
-//            Movie result = new Movie(movieDatabase.moviesDao().getAllMovies().get(i).getId(),
-//                    movieDatabase.moviesDao().getAllMovies().get(i).getTitle(),
-//                    movieDatabase.moviesDao().getAllMovies().get(i).getOverview(),
-//                    movieDatabase.moviesDao().getAllMovies().get(i).getPosterPath(),
-//                    movieDatabase.moviesDao().getAllMovies().get(i).getRating(),
-//                    movieDatabase.moviesDao().getAllMovies().get(i).getReleaseDate(),
-//                    movieDatabase.moviesDao().getAllMovies().get(i).getBackdropPath(),
-//                    movieDatabase.moviesDao().getAllMovies().get(i).getFavourite());
-//
-//            movieList.add(result);
-//        }
-
-        movieDatabase.moviesDao().getAllMovies().observe(this, new Observer<List<Movie>>() {
-            @Override public void onChanged(@Nullable final List<Movie> movies)
-            {
-
-                for (int i = 0; i < movies.size(); i++) {
-            Movie result = new Movie(
-                    movies.get(i).getId(),
-                    movies.get(i).getTitle(),
-                    movies.get(i).getOverview(),
-                    movies.get(i).getPosterPath(),
-                    movies.get(i).getRating(),
-                    movies.get(i).getReleaseDate(),
-                    movies.get(i).getBackdropPath(),
-                    movies.get(i).getFavourite());
+        for (int i = 0; i < movieDatabase.moviesDao().getAllMovies().size(); i++) {
+            Movie result = new Movie(movieDatabase.moviesDao().getAllMovies().get(i).getId(),
+                    movieDatabase.moviesDao().getAllMovies().get(i).getTitle(),
+                    movieDatabase.moviesDao().getAllMovies().get(i).getOverview(),
+                    movieDatabase.moviesDao().getAllMovies().get(i).getPosterPath(),
+                    movieDatabase.moviesDao().getAllMovies().get(i).getRating(),
+                    movieDatabase.moviesDao().getAllMovies().get(i).getReleaseDate(),
+                    movieDatabase.moviesDao().getAllMovies().get(i).getBackdropPath(),
+                    movieDatabase.moviesDao().getAllMovies().get(i).getFavourite());
 
             movieList.add(result);
         }
 
-
-        adapter = new MovieAdapter(MainActivity.this, movies);
-                recyclerView.setAdapter(adapter);
-               adapter.notifyDataSetChanged();
-            }
-        }
-        );
-
-
-
-
-//        adapter = new MovieAdapter(this, movieList);
-//        recyclerView.setAdapter(adapter);
-//        adapter.notifyDataSetChanged();
+        adapter = new MovieAdapter(this, movieList);
+        recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
 
