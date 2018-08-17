@@ -67,7 +67,6 @@ public class DetailActivity extends AppCompatActivity {
     ScrollView view;
 
     private Movie movie;
-    private Movie movieobj;
     private MovieDatabase movieDatabase;
     private static List<Movie> moviesInDatabaseList;
     ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
@@ -128,7 +127,7 @@ public class DetailActivity extends AppCompatActivity {
         observer=new Observer<Movie>() {
             @Override
             public void onChanged(@Nullable Movie moviesResult) {
-                movieobj = moviesResult;
+                movie = moviesResult;
                 mainViewModel.getMoviesResults().removeObserver(this);
             }
         };
