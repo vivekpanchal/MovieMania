@@ -1,5 +1,7 @@
 package com.panchal.vivek.moviemania;
 
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -26,6 +28,8 @@ import com.panchal.vivek.moviemania.Model.Trailer;
 import com.panchal.vivek.moviemania.Model.TrailerResult;
 import com.panchal.vivek.moviemania.Networking.ApiClient;
 import com.panchal.vivek.moviemania.Networking.ApiInterface;
+import com.panchal.vivek.moviemania.ViewModel.MainViewModel;
+import com.panchal.vivek.moviemania.ViewModel.ViewModelFactory;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -68,6 +72,9 @@ public class DetailActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     @BindView(R.id.review_recycle)
     RecyclerView mReviewRecycler;
+    public static int movieId;
+    MainViewModel mainViewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +87,8 @@ public class DetailActivity extends AppCompatActivity {
 
         //instantiating database
         movieDatabase = MovieDatabase.getDatabase(getApplicationContext());
-        moviesInDatabaseList = movieDatabase.moviesDao().getAllMovies();
+        moviesInDatabaseList = movieDatabase.moviesDao().getMovies(String.valueOf(movieId));
+       mainViewModel = ViewModelProviders.of(this , new ViewModelFactory(movieDatabase , Integer.toString(movieId))).get(MainViewModel.class);
 
 
         Intent intent = getIntent();

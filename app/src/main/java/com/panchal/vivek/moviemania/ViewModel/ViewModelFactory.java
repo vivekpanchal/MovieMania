@@ -7,14 +7,13 @@ import android.support.annotation.NonNull;
 
 import com.panchal.vivek.moviemania.Database.MovieDatabase;
 
-public class ViewModelFactory extends ViewModelProvider.AndroidViewModelFactory {
+public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
     private final MovieDatabase movieDatabase;
     private final String movieId;
 
-
-    public ViewModelFactory(@NonNull Application application, MovieDatabase movieDatabase, String movieId) {
-        super(application);
+    public ViewModelFactory(MovieDatabase movieDatabase, String movieId) {
+        super();
         this.movieDatabase = movieDatabase;
         this.movieId = movieId;
     }
@@ -24,7 +23,6 @@ public class ViewModelFactory extends ViewModelProvider.AndroidViewModelFactory 
     @Override
     @SuppressWarnings("unchecked")
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        return (T) new MainViewModel(movieDatabase);
+        return (T) new MainViewModel(movieDatabase, movieId);
     }
-
 }

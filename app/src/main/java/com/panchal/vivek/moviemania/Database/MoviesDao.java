@@ -13,13 +13,13 @@ import com.panchal.vivek.moviemania.Model.Movie;
 import java.util.List;
 
 @Dao
-public interface MoviesDao{
+public interface MoviesDao {
 
     @Query("SELECT * FROM movies")
     LiveData<List<Movie>> getAllMovies();
 
     @Query("SELECT * FROM movies WHERE id = :id")
-    LiveData<List<Movie>> getMovies(String id);
+    LiveData<Movie> getMovies(String id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMovie(Movie... movie);
