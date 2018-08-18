@@ -106,7 +106,12 @@ public class MainActivity extends AppCompatActivity {
             movieList.clear();
         }
 
-        for (int i = 0; i < movieDatabase.moviesDao().getAllMovies().size(); i++) {
+        if (movieDatabase.moviesDao().getAllMovies().size()==0){
+
+            Toast.makeText(this,"no data",Toast.LENGTH_SHORT).show();
+        }else{
+
+            for (int i = 0; i < movieDatabase.moviesDao().getAllMovies().size(); i++) {
             Movie result = new Movie(movieDatabase.moviesDao().getAllMovies().get(i).getId(),
                     movieDatabase.moviesDao().getAllMovies().get(i).getTitle(),
                     movieDatabase.moviesDao().getAllMovies().get(i).getOverview(),
@@ -117,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
                     movieDatabase.moviesDao().getAllMovies().get(i).getFavourite());
 
             movieList.add(result);
+        }
         }
 
         adapter = new MovieAdapter(this, movieList);

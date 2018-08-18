@@ -42,7 +42,8 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
     public void onBindViewHolder(@NonNull TrailerViewHolder holder, int position) {
         final String key = trailers.get(position).getKey();
         String title = trailers.get(position).getName();
-//        Picasso.get().load(R.drawable.ic_movie).into(holder.mTrailer);
+        String trailer_img="http://img.youtube.com/vi/"+key+"/2.jpg";
+        Picasso.get().load(trailer_img).into(holder.mTrailer);
 
         holder.mTrailerTitle.setText(title);
         holder.mTrailerCard.setOnClickListener(new View.OnClickListener() {
@@ -61,8 +62,9 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
     }
 
     public class TrailerViewHolder extends RecyclerView.ViewHolder {
-//        @BindView(R.id.trailer_img)
-//        ImageView mTrailer;
+        @BindView(R.id.trailer_img)
+        ImageView mTrailer;
+
         @BindView(R.id.trailer_Card)
         CardView mTrailerCard;
         @BindView(R.id.movie_trailer_title)

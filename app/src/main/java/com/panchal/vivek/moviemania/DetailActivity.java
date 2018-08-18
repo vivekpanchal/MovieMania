@@ -93,7 +93,7 @@ public class DetailActivity extends AppCompatActivity {
         //instantiating database
         movieDatabase = MovieDatabase.getDatabase(getApplicationContext());
         moviesInDatabaseList = movieDatabase.moviesDao().getAllMovies();
-        mainViewModel = ViewModelProviders.of(this , new ViewModelFactory(movieDatabase , Integer.toString(movieId))).get(MainViewModel.class);
+//        mainViewModel = ViewModelProviders.of(this , new ViewModelFactory(movieDatabase , Integer.toString(movieId))).get(MainViewModel.class);
 
 
         Intent intent = getIntent();
@@ -123,15 +123,15 @@ public class DetailActivity extends AppCompatActivity {
         loadTrailer(String.valueOf(movie_id));
         loadReviews(String.valueOf(movie_id));
 
-
-        observer=new Observer<Movie>() {
-            @Override
-            public void onChanged(@Nullable Movie moviesResult) {
-                movie = moviesResult;
-                mainViewModel.getMoviesResults().removeObserver(this);
-            }
-        };
-        mainViewModel.getMoviesResults().observe(DetailActivity.this, observer);
+//
+//        observer=new Observer<Movie>() {
+//            @Override
+//            public void onChanged(@Nullable Movie moviesResult) {
+//                movie = moviesResult;
+//                mainViewModel.getMoviesResults().removeObserver(this);
+//            }
+//        };
+//        mainViewModel.getMoviesResults().observe(DetailActivity.this, observer);
 
         likeButton.setOnClickListener(new View.OnClickListener() {
             @Override

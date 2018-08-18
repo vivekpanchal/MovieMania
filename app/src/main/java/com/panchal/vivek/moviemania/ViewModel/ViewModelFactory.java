@@ -12,17 +12,17 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
     private final MovieDatabase movieDatabase;
     private final String movieId;
 
+
     public ViewModelFactory(MovieDatabase movieDatabase, String movieId) {
-        super();
         this.movieDatabase = movieDatabase;
         this.movieId = movieId;
     }
-
 
     @NonNull
     @Override
     @SuppressWarnings("unchecked")
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        return (T) new MainViewModel(movieDatabase, movieId);
+        return (T) new MainViewModel(movieDatabase,movieId);
     }
+
 }

@@ -14,7 +14,7 @@ public class MainViewModel  extends ViewModel{
     private LiveData<Movie> moviesEntity;
 
     public MainViewModel(@NonNull MovieDatabase movieDatabase , String id) {
-       moviesEntity=movieDatabase.moviesDao().getMovies(id);
+//        moviesEntity = movieDatabase.moviesDao().getMovies(id);
     }
 
     public LiveData<Movie> getMoviesResults() {

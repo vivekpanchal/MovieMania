@@ -19,7 +19,7 @@ public interface MoviesDao {
     List<Movie> getAllMovies();
 
     @Query("SELECT * FROM movies WHERE id = :id")
-    LiveData<Movie> getMovies(String id);
+    LiveData<List<Movie>> getMovies(String id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMovie(Movie... movie);
