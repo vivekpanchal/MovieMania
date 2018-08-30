@@ -1,9 +1,7 @@
 package com.panchal.vivek.moviemania;
 
-import android.arch.lifecycle.Observer;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +14,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.panchal.vivek.moviemania.Adapter.MovieAdapter;
+import com.panchal.vivek.moviemania.Database.FavModel;
 import com.panchal.vivek.moviemania.Database.MovieDatabase;
 import com.panchal.vivek.moviemania.Model.Movie;
 import com.panchal.vivek.moviemania.Model.MovieResponse;
@@ -35,9 +34,9 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.recylerView)
     RecyclerView recyclerView;
     MovieAdapter adapter;
-    private List<Movie> movieList;
+    private List<FavModel> favMovieList;
     ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
-    private final static String API_KEY =BuildConfig.API_KEY;
+    private final static String API_KEY = BuildConfig.API_KEY;
     private MovieDatabase movieDatabase;
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -47,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         intView();
         loadPopularMovies();
-        movieList=new ArrayList<>();
+        favMovieList = new ArrayList<>();
     }
 
     private void intView() {
@@ -101,34 +100,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void loadFavMovie() {
-        if (movieList != null) {
-            movieList.clear();
-        }
+//    public void loadFavMovie() {
+//
+//        if (favMovieList != null) {
+//            favMovieList.clear();
+//        }
+//
+//        if (movieDatabase.moviesDao().getAllMovies().size() == 0) {
+//
+//            Toast.makeText(this, "no data", Toast.LENGTH_SHORT).show();
+//        } else {
+//
+//            for (int i = 0; i < movieDatabase.moviesDao().getAllMovies().size(); i++) {
+//                FavModel result = new Movie(movieDatabase.moviesDao().getAllMovies().get(i).getId(),
+//                        movieDatabase.moviesDao().getAllMovies().get(i).getOriginalTitle(),
+//                        movieDatabase.moviesDao().getAllMovies().get(i).getOverview(),
+//                        movieDatabase.moviesDao().getAllMovies().get(i).getPosterPath(),
+//                        movieDatabase.moviesDao().getAllMovies().get(i).getOverview(),
+//                        movieDatabase.moviesDao().getAllMovies().get(i).getReleaseDate(),
+//                        movieDatabase.moviesDao().getAllMovies().get(i).getBackdropPath(),
+//
+//                favMovieList.add(result);
+//            }
+//        }
+//
+//        adapter = new MovieAdapter(this, favMovieList);
+//        recyclerView.setAdapter(adapter);
+//        adapter.notifyDataSetChanged();
+//    }
 
-        if (movieDatabase.moviesDao().getAllMovies().size()==0){
-
-            Toast.makeText(this,"no data",Toast.LENGTH_SHORT).show();
-        }else{
-
-            for (int i = 0; i < movieDatabase.moviesDao().getAllMovies().size(); i++) {
-            Movie result = new Movie(movieDatabase.moviesDao().getAllMovies().get(i).getId(),
-                    movieDatabase.moviesDao().getAllMovies().get(i).getTitle(),
-                    movieDatabase.moviesDao().getAllMovies().get(i).getOverview(),
-                    movieDatabase.moviesDao().getAllMovies().get(i).getPosterPath(),
-                    movieDatabase.moviesDao().getAllMovies().get(i).getRating(),
-                    movieDatabase.moviesDao().getAllMovies().get(i).getReleaseDate(),
-                    movieDatabase.moviesDao().getAllMovies().get(i).getBackdropPath(),
-                    movieDatabase.moviesDao().getAllMovies().get(i).getFavourite());
-
-            movieList.add(result);
-        }
-        }
-
-        adapter = new MovieAdapter(this, movieList);
-        recyclerView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
-    }
 
 
     @Override
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
 
             case R.id.favourite:
-                loadFavMovie();
+//                loadFavMovie();
                 return true;
 
             default:

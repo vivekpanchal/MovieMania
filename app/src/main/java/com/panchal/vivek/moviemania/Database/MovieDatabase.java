@@ -6,19 +6,14 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 import android.util.Log;
 
-import com.panchal.vivek.moviemania.Model.Movie;
 
-import java.util.concurrent.locks.Lock;
-
-
-
-@Database(entities = {Movie.class}, version = 1 ,exportSchema = false)
+@Database(entities = {FavModel.class}, version = 1 ,exportSchema = false)
 public abstract class MovieDatabase extends RoomDatabase {
 
     private static String TAG=MovieDatabase.class.getSimpleName();
 
     private static final Object LOCK = new Object();
-    private static final String DATABASE_NAME = "moviesDB3";
+    private static final String DATABASE_NAME = "favDb";
     public abstract MoviesDao moviesDao();
     private static MovieDatabase INSTANCE;
 

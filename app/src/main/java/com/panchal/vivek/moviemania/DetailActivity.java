@@ -1,12 +1,9 @@
 package com.panchal.vivek.moviemania;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,6 +20,7 @@ import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.like.LikeButton;
 import com.panchal.vivek.moviemania.Adapter.ReviewAdapter;
 import com.panchal.vivek.moviemania.Adapter.TrailerAdapter;
+import com.panchal.vivek.moviemania.Database.FavModel;
 import com.panchal.vivek.moviemania.Database.MovieDatabase;
 import com.panchal.vivek.moviemania.Model.Movie;
 import com.panchal.vivek.moviemania.Model.ReviewResult;
@@ -32,11 +30,11 @@ import com.panchal.vivek.moviemania.Model.TrailerResult;
 import com.panchal.vivek.moviemania.Networking.ApiClient;
 import com.panchal.vivek.moviemania.Networking.ApiInterface;
 import com.panchal.vivek.moviemania.ViewModel.MainViewModel;
-import com.panchal.vivek.moviemania.ViewModel.ViewModelFactory;
+import com.panchal.vivek.moviemania.utils.AppExecutors;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -67,18 +65,17 @@ public class DetailActivity extends AppCompatActivity {
     ScrollView view;
 
     private Movie movie;
+    private FavModel favModel;
     private MovieDatabase movieDatabase;
-    private static List<Movie> moviesInDatabaseList;
+    private static List<FavModel> moviesInDatabaseList = new ArrayList<>();
     ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
     private final static String API_KEY = BuildConfig.API_KEY;
     private static final String TAG = DetailActivity.class.getSimpleName();
-
     private RecyclerView recyclerView;
     @BindView(R.id.review_recycle)
     RecyclerView mReviewRecycler;
-    public static int movieId;
-    MainViewModel mainViewModel;
-    Observer observer;
+
+    private Boolean isFavourite;
 
 
     @Override
@@ -92,8 +89,8 @@ public class DetailActivity extends AppCompatActivity {
 
         //instantiating database
         movieDatabase = MovieDatabase.getDatabase(getApplicationContext());
-        moviesInDatabaseList = movieDatabase.moviesDao().getAllMovies();
-//        mainViewModel = ViewModelProviders.of(this , new ViewModelFactory(movieDatabase , Integer.toString(movieId))).get(MainViewModel.class);
+
+//      mainViewModel = ViewModelProviders.of(this , new ViewModelFactory(movieDatabase , Integer.toString(movieId))).get(MainViewModel.class);
 
 
         Intent intent = getIntent();
@@ -104,7 +101,7 @@ public class DetailActivity extends AppCompatActivity {
         final String movieposter = movie.getPosterPath();
         final Double rating = movie.getRating();
         final String release_Date = movie.getReleaseDate();
-        String plotsynopsis = movie.getOverview();
+        final String plotsynopsis = movie.getOverview();
 
 
         String backdrop_url = getResources().getString(R.string.backdrop_url) + movie_backdrop;
@@ -119,24 +116,32 @@ public class DetailActivity extends AppCompatActivity {
         movie_rating.setText(String.valueOf(rating));
         overView_text.setText(plotsynopsis);
 
-
+        //loading the trailers
         loadTrailer(String.valueOf(movie_id));
         loadReviews(String.valueOf(movie_id));
 
-//
-//        observer=new Observer<Movie>() {
-//            @Override
-//            public void onChanged(@Nullable Movie moviesResult) {
-//                movie = moviesResult;
-//                mainViewModel.getMoviesResults().removeObserver(this);
-//            }
-//        };
-//        mainViewModel.getMoviesResults().observe(DetailActivity.this, observer);
+        isfavourite();
+
 
         likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                performDataQuery();
+
+                if (isFavourite) {
+                    removeMovieFromList();
+                    isFavourite = false;
+                    likeButton.setLiked(false);
+                    Snackbar snackbar = Snackbar.make(view, "removed to favourite", Snackbar.LENGTH_SHORT);
+                    snackbar.show();
+                } else {
+                    addToMovieList();
+                    isFavourite = true;
+                    likeButton.setLiked(true);
+                    Snackbar snackbar = Snackbar.make(view, "added to favourite", Snackbar.LENGTH_SHORT);
+                    snackbar.show();
+                }
+
+
             }
         });
 
@@ -171,42 +176,46 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     void performDataQuery() {
-        int i = 0;
-        do {
-            if (moviesInDatabaseList.size() == 0) {
-                movieDatabase.moviesDao().insertMovie(movie);
-                movie.setFavourite(true);
-                Snackbar snackbar = Snackbar.make(view, "Added to favourite", Snackbar.LENGTH_SHORT);
-                snackbar.show();
-                likeButton.setLiked(true);
-                movieDatabase.moviesDao().updateMovie(movie);
-                break;
-            }
-            if (Objects.equals(movie.getId(),moviesInDatabaseList.get(i).getId())) {
-                if (moviesInDatabaseList.get(i).getId().equals(movie.getId())) {
-                    movieDatabase.moviesDao().deleteMovies(movie);
-                    movie.setFavourite(false);
-                    Snackbar snackbar = Snackbar.make(view, "Removed from favourite", Snackbar.LENGTH_SHORT);
-                    snackbar.show();
-                    likeButton.setLiked(false);
 
 
-                    movieDatabase.moviesDao().updateMovie(movie);
-                    break;
-                } else if (!moviesInDatabaseList.get(i).getId().equals(movie.getId())) {
-                    movieDatabase.moviesDao().insertMovie(movie);
-                    movie.setFavourite(true);
-                    Snackbar snackbar = Snackbar.make(view, "Added to favourite", Snackbar.LENGTH_SHORT);
-                    snackbar.show();
-                    likeButton.setLiked(true);
+//        int i = 0;
+//        do {
+//            if (moviesInDatabaseList.size() == 0) {
+//                movieDatabase.moviesDao().insertMovie(movie);
+//                movie.setFavourite(true);
+//                Snackbar snackbar = Snackbar.make(view, "Added to favourite", Snackbar.LENGTH_SHORT);
+//                snackbar.show();
+//                likeButton.setLiked(true);
+//                movieDatabase.moviesDao().updateMovie(movie);
+//                break;
+//            }
+//            if (Objects.equals(movie.getId(), moviesInDatabaseList.get(i).getId())) {
+//                if (moviesInDatabaseList.get(i).getId().equals(movie.getId())) {
+//                    movieDatabase.moviesDao().deleteMovies(movie);
+//                    movie.setFavourite(false);
+//                    Snackbar snackbar = Snackbar.make(view, "Removed from favourite", Snackbar.LENGTH_SHORT);
+//                    snackbar.show();
+//                    likeButton.setLiked(false);
+//
+//
+//                    movieDatabase.moviesDao().updateMovie(movie);
+//                    break;
+//                } else if (!moviesInDatabaseList.get(i).getId().equals(movie.getId())) {
+//                    movieDatabase.moviesDao().insertMovie(movie);
+//                    movie.setFavourite(true);
+//                    Snackbar snackbar = Snackbar.make(view, "Added to favourite", Snackbar.LENGTH_SHORT);
+//                    snackbar.show();
+//                    likeButton.setLiked(true);
+//
+//                    movieDatabase.moviesDao().updateMovie(movie);
+//                    break;
+//                }
+//            }
+//
+//            i++;
+//        } while (i < moviesInDatabaseList.size());
 
-                    movieDatabase.moviesDao().updateMovie(movie);
-                    break;
-                }
-            }
 
-            i++;
-        } while (i < moviesInDatabaseList.size());
     }
 
     private void loadTrailer(String id) {
@@ -233,4 +242,71 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void removeMovieFromList() {
+
+        final int id = movie.getId();
+
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                movie.setFavourite(false);
+                movieDatabase.moviesDao().deleteFavMovie(id);
+
+
+
+            }
+        });
+    }
+
+
+    private void addToMovieList() {
+
+        Intent intent = getIntent();
+        movie = intent.getParcelableExtra("MovieList");
+        final String id = movie.getId().toString();
+        final String backdropPath = movie.getBackdropPath();
+        final String fav_title = movie.getTitle();
+        final String fav_poster = movie.getPosterPath();
+        final String fav_Rating = movie.getRating().toString();
+        final String fav_Releasedate = movie.getReleaseDate();
+        final String fav_overview = movie.getOverview();
+
+        final FavModel favModel = new FavModel(id, fav_Rating, fav_title, fav_poster, backdropPath, fav_overview, fav_Releasedate, true);
+
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                if (favModel.isFavourite()) {
+                    movieDatabase.moviesDao().insertMovie(favModel);
+                    isFavourite = true;
+
+
+                }
+            }
+        });
+    }
+
+
+    private void isfavourite() {
+        final String movieid = movie.getId().toString();
+        final FavModel[] movieResponse = new FavModel[1];
+
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                movieResponse[0] = movieDatabase.moviesDao().checkifExists(movieid);
+                //If the movie belongs to user favourites then it will be shown as liked
+                if (movieResponse[0] != null) {
+                    likeButton.setLiked(true);
+                    isFavourite = true;
+
+                } else {
+                    likeButton.setLiked(false);
+                    isFavourite = false;
+                }
+            }
+        });
+    }
+
 }
