@@ -75,7 +75,7 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.review_recycle)
     RecyclerView mReviewRecycler;
 
-    private Boolean isFavourite;
+    private Boolean isFavourite=false;
 
 
     @Override
@@ -92,6 +92,7 @@ public class DetailActivity extends AppCompatActivity {
 
 //      mainViewModel = ViewModelProviders.of(this , new ViewModelFactory(movieDatabase , Integer.toString(movieId))).get(MainViewModel.class);
 
+        isfavourite();
 
         Intent intent = getIntent();
         movie = intent.getParcelableExtra("MovieList");
@@ -120,7 +121,7 @@ public class DetailActivity extends AppCompatActivity {
         loadTrailer(String.valueOf(movie_id));
         loadReviews(String.valueOf(movie_id));
 
-        isfavourite();
+
 
 
         likeButton.setOnClickListener(new View.OnClickListener() {
@@ -245,15 +246,12 @@ public class DetailActivity extends AppCompatActivity {
 
     private void removeMovieFromList() {
 
-        final int id = movie.getId();
+        final String id = movie.getId().toString();
 
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                movie.setFavourite(false);
                 movieDatabase.moviesDao().deleteFavMovie(id);
-
-
 
             }
         });
@@ -279,8 +277,6 @@ public class DetailActivity extends AppCompatActivity {
             public void run() {
                 if (favModel.isFavourite()) {
                     movieDatabase.moviesDao().insertMovie(favModel);
-                    isFavourite = true;
-
 
                 }
             }
@@ -289,16 +285,20 @@ public class DetailActivity extends AppCompatActivity {
 
 
     private void isfavourite() {
-        final String movieid = movie.getId().toString();
+
+        Intent intent = getIntent();
+        movie = intent.getParcelableExtra("MovieList");
+        final String movieId = movie.getId().toString();
+
         final FavModel[] movieResponse = new FavModel[1];
 
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+        AppExecutors.getInstance().mainThread().execute(new Runnable() {
             @Override
             public void run() {
-                movieResponse[0] = movieDatabase.moviesDao().checkifExists(movieid);
+                movieResponse[0] = movieDatabase.moviesDao().checkifExists(movieId);
                 //If the movie belongs to user favourites then it will be shown as liked
                 if (movieResponse[0] != null) {
-                    likeButton.setLiked(true);
+                    likeButton.setLiked(movieResponse[0].isFavourite());
                     isFavourite = true;
 
                 } else {

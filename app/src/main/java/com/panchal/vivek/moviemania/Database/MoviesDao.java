@@ -27,8 +27,8 @@ public interface MoviesDao {
     @Update
     void updateMovie(FavModel favModel);
 
-    @Query("DELETE FROM favMovie WHERE id = :id")
-    void deleteFavMovie(int id);
+    @Query("DELETE FROM favMovie WHERE movie_id = :movie_id")
+    void deleteFavMovie(String movie_id);
 
 
 }
