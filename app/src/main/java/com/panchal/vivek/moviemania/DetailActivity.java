@@ -176,48 +176,6 @@ public class DetailActivity extends AppCompatActivity {
 
     }
 
-    void performDataQuery() {
-
-
-//        int i = 0;
-//        do {
-//            if (moviesInDatabaseList.size() == 0) {
-//                movieDatabase.moviesDao().insertMovie(movie);
-//                movie.setFavourite(true);
-//                Snackbar snackbar = Snackbar.make(view, "Added to favourite", Snackbar.LENGTH_SHORT);
-//                snackbar.show();
-//                likeButton.setLiked(true);
-//                movieDatabase.moviesDao().updateMovie(movie);
-//                break;
-//            }
-//            if (Objects.equals(movie.getId(), moviesInDatabaseList.get(i).getId())) {
-//                if (moviesInDatabaseList.get(i).getId().equals(movie.getId())) {
-//                    movieDatabase.moviesDao().deleteMovies(movie);
-//                    movie.setFavourite(false);
-//                    Snackbar snackbar = Snackbar.make(view, "Removed from favourite", Snackbar.LENGTH_SHORT);
-//                    snackbar.show();
-//                    likeButton.setLiked(false);
-//
-//
-//                    movieDatabase.moviesDao().updateMovie(movie);
-//                    break;
-//                } else if (!moviesInDatabaseList.get(i).getId().equals(movie.getId())) {
-//                    movieDatabase.moviesDao().insertMovie(movie);
-//                    movie.setFavourite(true);
-//                    Snackbar snackbar = Snackbar.make(view, "Added to favourite", Snackbar.LENGTH_SHORT);
-//                    snackbar.show();
-//                    likeButton.setLiked(true);
-//
-//                    movieDatabase.moviesDao().updateMovie(movie);
-//                    break;
-//                }
-//            }
-//
-//            i++;
-//        } while (i < moviesInDatabaseList.size());
-
-
-    }
 
     private void loadTrailer(String id) {
         Call<Trailer> call = apiInterface.getMovieTrailers(id, API_KEY);
