@@ -122,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         assert response.body() != null;
                         List<Movie> movies = response.body().getResults();
+
                         recyclerView.setAdapter(new MovieAdapter(MainActivity.this, movies));
                     } catch (NullPointerException e) {
                         Log.d(TAG, "onResponse: null pointer aarha h ");
@@ -151,6 +152,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void loadFavMovie() {
+        RecyclerView.LayoutManager  layoutManager = new GridLayoutManager(this, 2);
+        recyclerView.setLayoutManager(layoutManager);
         favAdapter = new FavAdapter(this);
         recyclerView.setAdapter(favAdapter);
         setUpViewModel();
