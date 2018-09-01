@@ -39,7 +39,6 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
     @BindView(R.id.recylerView)
     RecyclerView recyclerView;
-    MovieAdapter adapter;
     FavAdapter favAdapter;
     ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
     private final static String API_KEY = BuildConfig.API_KEY;
@@ -111,6 +110,14 @@ public class MainActivity extends AppCompatActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
+        int orientation = newConfig.orientation;
+
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            recyclerView.setLayoutManager(new GridLayoutManager(this, 4));
+        }
+
     }
 
 
@@ -152,7 +159,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void loadFavMovie() {
-        RecyclerView.LayoutManager  layoutManager = new GridLayoutManager(this, 2);
+        final int spanCount = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 4 : 2;
+        layoutManager = new GridLayoutManager(this, spanCount);
         recyclerView.setLayoutManager(layoutManager);
         favAdapter = new FavAdapter(this);
         recyclerView.setAdapter(favAdapter);
