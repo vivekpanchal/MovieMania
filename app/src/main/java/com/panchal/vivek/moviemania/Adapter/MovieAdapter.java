@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.panchal.vivek.moviemania.Database.FavModel;
+import com.panchal.vivek.moviemania.MainActivity;
 import com.panchal.vivek.moviemania.Model.Movie;
 import com.panchal.vivek.moviemania.R;
 import com.panchal.vivek.moviemania.DetailActivity;
@@ -24,11 +26,18 @@ import butterknife.ButterKnife;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder> {
     private Context context;
     private List<Movie> movies;
+    private List<FavModel>favModels;
 
 
     public MovieAdapter(Context context, List<Movie> movies) {
         this.context = context;
         this.movies = movies;
+    }
+
+    public MovieAdapter(MainActivity context, List<FavModel> favMovieList) {
+        this.context=context;
+        this.favModels=favMovieList;
+
     }
 
 

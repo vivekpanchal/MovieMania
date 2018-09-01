@@ -1,7 +1,5 @@
 package com.panchal.vivek.moviemania;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -29,7 +27,6 @@ import com.panchal.vivek.moviemania.Model.Trailer;
 import com.panchal.vivek.moviemania.Model.TrailerResult;
 import com.panchal.vivek.moviemania.Networking.ApiClient;
 import com.panchal.vivek.moviemania.Networking.ApiInterface;
-import com.panchal.vivek.moviemania.ViewModel.MainViewModel;
 import com.panchal.vivek.moviemania.utils.AppExecutors;
 import com.squareup.picasso.Picasso;
 
@@ -90,7 +87,7 @@ public class DetailActivity extends AppCompatActivity {
         //instantiating database
         movieDatabase = MovieDatabase.getDatabase(getApplicationContext());
 
-//      mainViewModel = ViewModelProviders.of(this , new ViewModelFactory(movieDatabase , Integer.toString(movieId))).get(MainViewModel.class);
+//      mainViewModel = ViewModelProviders.of(this , new ViewModelFactory(movieDatabase , Integer.toString(movieId))).get(FavouriteViewModel.class);
 
         isfavourite();
 
@@ -169,6 +166,7 @@ public class DetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Reviews> call, Throwable t) {
+
 
             }
         });

@@ -13,7 +13,7 @@ import java.util.List;
 public interface MoviesDao {
 
     @Query("SELECT * FROM favMovie")
-    List<FavModel> getAllMovies();
+    LiveData<List<FavModel>> getAllMovies();
 
     @Query("SELECT * FROM favMovie WHERE id = :id")
     List<FavModel> getMovies(int id);
