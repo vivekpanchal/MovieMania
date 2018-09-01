@@ -21,14 +21,13 @@ import android.widget.Toast;
 import com.panchal.vivek.moviemania.Adapter.FavAdapter;
 import com.panchal.vivek.moviemania.Adapter.MovieAdapter;
 import com.panchal.vivek.moviemania.Database.FavModel;
-import com.panchal.vivek.moviemania.Database.MovieDatabase;
 import com.panchal.vivek.moviemania.Model.Movie;
 import com.panchal.vivek.moviemania.Model.MovieResponse;
 import com.panchal.vivek.moviemania.Networking.ApiClient;
 import com.panchal.vivek.moviemania.Networking.ApiInterface;
 import com.panchal.vivek.moviemania.ViewModel.FavouriteViewModel;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -48,15 +47,16 @@ public class MainActivity extends AppCompatActivity {
     public final static String LIST_STATE_KEY = "recycler_list_state";
     Parcelable listState;
     RecyclerView.LayoutManager layoutManager;
-    private final String KEY_RECYCLER_STATE = "recycler_state";
-    private static Bundle mBundleRecyclerViewState;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         intView();
+        setupLayoutManager();
         loadPopularMovies();
+
 
     }
 
@@ -67,43 +67,51 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setOverflowIcon(drawable);
         ButterKnife.bind(this);
 
+    }
+
+    private void setupLayoutManager() {
+
+
         final int spanCount = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 4 : 2;
-        GridLayoutManager layoutManager = new GridLayoutManager(this, spanCount);
+        layoutManager = new GridLayoutManager(this, spanCount);
         recyclerView.setLayoutManager(layoutManager);
+
+        recyclerView.setHasFixedSize(true);
+
 
     }
 
 
-//    @Override
-//    protected void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        // Save list state
-//        listState = layoutManager.onSaveInstanceState();
-//        outState.putParcelable(LIST_STATE_KEY, listState);
-//    }
-//
-//    @Override
-//    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-//        super.onRestoreInstanceState(savedInstanceState);
-//        // Retrieve list state and list/item positions
-//        if (savedInstanceState !=null){
-//            listState=savedInstanceState.getParcelable(LIST_STATE_KEY);
-//        }
-//    }
-//
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        if (listState !=null){
-//            layoutManager.onRestoreInstanceState(listState);
-//        }
-//    }
-//
-//    @Override
-//    public void onConfigurationChanged(Configuration newConfig) {
-//        super.onConfigurationChanged(newConfig);
-//
-//    }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // Save list state
+        listState = layoutManager.onSaveInstanceState();
+        outState.putParcelable(LIST_STATE_KEY, listState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        // Retrieve list state and list/item positions
+        if (savedInstanceState != null) {
+            listState = savedInstanceState.getParcelable(LIST_STATE_KEY);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (listState != null) {
+            layoutManager.onRestoreInstanceState(listState);
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+    }
 
 
     private void fetchData(Call<MovieResponse> call) {
