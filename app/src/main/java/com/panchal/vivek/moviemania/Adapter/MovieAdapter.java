@@ -26,7 +26,7 @@ import butterknife.ButterKnife;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder> {
     private Context context;
     private List<Movie> movies;
-    private List<FavModel>favModels;
+    private List<FavModel> favModels;
 
 
     public MovieAdapter(Context context, List<Movie> movies) {
@@ -35,8 +35,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
     }
 
     public MovieAdapter(MainActivity context, List<FavModel> favMovieList) {
-        this.context=context;
-        this.favModels=favMovieList;
+        this.context = context;
+        this.favModels = favMovieList;
 
     }
 
@@ -46,9 +46,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
         ImageView image_thumbnail;
         @BindView(R.id.image_item_card)
         CardView image_Card;
+
         public MyViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 
@@ -56,20 +57,20 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater= LayoutInflater.from(context);
-        View view= inflater.inflate(R.layout.movie_item,parent,false);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View view = inflater.inflate(R.layout.movie_item, parent, false);
         return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
-        String url = context.getResources().getString(R.string.poster_url)+ movies.get(position).getPosterPath();
+        String url = context.getResources().getString(R.string.poster_url) + movies.get(position).getPosterPath();
 
         Picasso.get().load(url).into(holder.image_thumbnail);
         holder.image_Card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(context, DetailActivity.class);
+                Intent intent = new Intent(context, DetailActivity.class);
                 intent.putExtra("MovieList", movies.get(holder.getAdapterPosition()));
                 context.startActivity(intent);
 

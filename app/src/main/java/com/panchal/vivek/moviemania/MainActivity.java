@@ -1,11 +1,15 @@
 package com.panchal.vivek.moviemania;
 
+import android.app.AlertDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,7 +19,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.panchal.vivek.moviemania.Adapter.FavAdapter;
@@ -26,6 +29,7 @@ import com.panchal.vivek.moviemania.Model.MovieResponse;
 import com.panchal.vivek.moviemania.Networking.ApiClient;
 import com.panchal.vivek.moviemania.Networking.ApiInterface;
 import com.panchal.vivek.moviemania.ViewModel.FavouriteViewModel;
+import com.panchal.vivek.moviemania.utils.NetworkConnection;
 
 
 import java.util.List;
@@ -39,6 +43,8 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
     @BindView(R.id.recylerView)
     RecyclerView recyclerView;
+    @BindView(R.id.constraintLayout)
+    ConstraintLayout layout;
     FavAdapter favAdapter;
     ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
     private final static String API_KEY = BuildConfig.API_KEY;
@@ -46,15 +52,22 @@ public class MainActivity extends AppCompatActivity {
     public final static String LIST_STATE_KEY = "recycler_list_state";
     Parcelable listState;
     RecyclerView.LayoutManager layoutManager;
-
+    boolean isConnected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        isConnected = NetworkConnection.getConnectivityStatus(MainActivity.this);
         intView();
         setupLayoutManager();
-        loadPopularMovies();
+
+        if (isConnected) {
+            loadPopularMovies();
+        } else {
+            checkNetworkConnection();
+            Snackbar.make(layout, "Please Check Internet Connection", Snackbar.LENGTH_LONG).show();
+        }
 
 
     }
@@ -70,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupLayoutManager() {
 
-
         final int spanCount = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 4 : 2;
         layoutManager = new GridLayoutManager(this, spanCount);
         recyclerView.setLayoutManager(layoutManager);
@@ -85,17 +97,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         // Save list state
+
+
         listState = layoutManager.onSaveInstanceState();
         outState.putParcelable(LIST_STATE_KEY, listState);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
+
         // Retrieve list state and list/item positions
         if (savedInstanceState != null) {
             listState = savedInstanceState.getParcelable(LIST_STATE_KEY);
         }
+
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
@@ -110,14 +126,21 @@ public class MainActivity extends AppCompatActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        int orientation = newConfig.orientation;
+    }
 
-        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            recyclerView.setLayoutManager(new GridLayoutManager(this, 4));
-        }
 
+    private void checkNetworkConnection() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("No internet Connection");
+        builder.setMessage("Please turn on internet connection and then Refresh to continue ");
+        builder.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
 
@@ -128,11 +151,14 @@ public class MainActivity extends AppCompatActivity {
                 if (response.body() != null) {
                     try {
                         assert response.body() != null;
-                        List<Movie> movies = response.body().getResults();
+                        List<Movie> movies = null;
+                        if (response.body() != null) {
+                            movies = response.body().getResults();
+                        }
 
                         recyclerView.setAdapter(new MovieAdapter(MainActivity.this, movies));
                     } catch (NullPointerException e) {
-                        Log.d(TAG, "onResponse: null pointer aarha h ");
+                        Log.d(TAG, "onResponse: null pointer exception" + e);
                     }
                 }
 
@@ -140,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<MovieResponse> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "Oops No connection", Toast.LENGTH_SHORT).show();
+                checkNetworkConnection();
                 Log.e(TAG, t.toString());
 
             }
@@ -175,12 +201,11 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("Livedata test", "Update list of tasks from livedata i viewmodel");
                 if (favouritesModals != null && favouritesModals.size() > 0) {
 
-                    recyclerView.setVisibility(View.VISIBLE);
+
                     favAdapter.setFavouriteMovies(favouritesModals);
 
                 } else {
                     favAdapter.setFavouriteMovies(null);
-                    recyclerView.setVisibility(View.GONE);
                     Toast.makeText(MainActivity.this, "Nothing in the Favourites", Toast.LENGTH_LONG).show();
                 }
             }

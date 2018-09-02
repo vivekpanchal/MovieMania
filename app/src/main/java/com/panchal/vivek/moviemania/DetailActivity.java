@@ -1,7 +1,10 @@
 package com.panchal.vivek.moviemania;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,6 +30,7 @@ import com.panchal.vivek.moviemania.Model.Trailer;
 import com.panchal.vivek.moviemania.Model.TrailerResult;
 import com.panchal.vivek.moviemania.Networking.ApiClient;
 import com.panchal.vivek.moviemania.Networking.ApiInterface;
+import com.panchal.vivek.moviemania.ViewModel.FavouriteViewModel;
 import com.panchal.vivek.moviemania.utils.AppExecutors;
 import com.squareup.picasso.Picasso;
 
@@ -72,7 +76,7 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.review_recycle)
     RecyclerView mReviewRecycler;
 
-    private Boolean isFavourite=false;
+    private Boolean isFavourite = false;
 
 
     @Override
@@ -87,7 +91,6 @@ public class DetailActivity extends AppCompatActivity {
         //instantiating database
         movieDatabase = MovieDatabase.getDatabase(getApplicationContext());
 
-//      mainViewModel = ViewModelProviders.of(this , new ViewModelFactory(movieDatabase , Integer.toString(movieId))).get(FavouriteViewModel.class);
 
         isfavourite();
 
@@ -119,8 +122,6 @@ public class DetailActivity extends AppCompatActivity {
         loadReviews(String.valueOf(movie_id));
 
 
-
-
         likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,6 +147,7 @@ public class DetailActivity extends AppCompatActivity {
 
     }
 
+
     private void loadReviews(String id) {
         Call<Reviews> reviewsCall = apiInterface.getMovieReviews(id, API_KEY);
         reviewsCall.enqueue(new Callback<Reviews>() {
@@ -158,7 +160,8 @@ public class DetailActivity extends AppCompatActivity {
                         mReviewRecycler.setAdapter(new ReviewAdapter(DetailActivity.this, reviewResults));
                         mReviewRecycler.setLayoutManager(new LinearLayoutManager(DetailActivity.this));
                     } catch (NullPointerException e) {
-                        Log.d(TAG, "onResponse: null pointer Exception ");
+
+                        Log.d(TAG, "onResponse: pointer Exception " + e);
                     }
                 }
 
@@ -167,6 +170,7 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Reviews> call, Throwable t) {
 
+                Toast.makeText(DetailActivity.this, "Oops No internet Connection", Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -187,7 +191,7 @@ public class DetailActivity extends AppCompatActivity {
                         recyclerView.setAdapter(new TrailerAdapter(DetailActivity.this, result));
                         recyclerView.setLayoutManager(new LinearLayoutManager(DetailActivity.this, LinearLayoutManager.HORIZONTAL, false));
                     } catch (NullPointerException e) {
-                        Log.d(TAG, "onResponse: null pointer Exception ");
+                        Log.d(TAG, "onResponse:Exception " + e);
                     }
                 }
             }
@@ -220,13 +224,13 @@ public class DetailActivity extends AppCompatActivity {
         movie = intent.getParcelableExtra("MovieList");
         final String id = movie.getId().toString();
         final String backdropPath = movie.getBackdropPath();
-        final String fav_title = movie.getTitle();
-        final String fav_poster = movie.getPosterPath();
-        final String fav_Rating = movie.getRating().toString();
-        final String fav_Releasedate = movie.getReleaseDate();
+        final String favTitle = movie.getTitle();
+        final String favPoster = movie.getPosterPath();
+        final String favRating = movie.getRating().toString();
+        final String favReleasedate = movie.getReleaseDate();
         final String fav_overview = movie.getOverview();
 
-        final FavModel favModel = new FavModel(id, fav_Rating, fav_title, fav_poster, backdropPath, fav_overview, fav_Releasedate, true);
+        final FavModel favModel = new FavModel(id, favRating, favTitle, favPoster, backdropPath, fav_overview, favReleasedate, true);
 
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
@@ -264,5 +268,8 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
     }
-
 }
+
+
+
+
