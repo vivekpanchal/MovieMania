@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import com.panchal.vivek.moviemania.Database.FavModel;
 import com.panchal.vivek.moviemania.DetailActivity;
 import com.panchal.vivek.moviemania.FavouriteActivity;
+import com.panchal.vivek.moviemania.Model.Movie;
 import com.panchal.vivek.moviemania.R;
 import com.squareup.picasso.Picasso;
 
@@ -26,10 +27,15 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.FavouriteViewHol
 
     private List<FavModel> mFavouriteList;
     private Context mContext;
+    private FavItemClickListener favItemClickListener;
 
+    public interface FavItemClickListener{
+        void onFavItemClick(int adapterPosition, FavModel favModel, ImageView image_thumbnail);
+    };
 
-    public FavAdapter(Context mContext) {
+    public FavAdapter(FavItemClickListener favItemClickListener, Context mContext) {
         this.mContext = mContext;
+        this.favItemClickListener = favItemClickListener;
     }
 
 
@@ -59,21 +65,25 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.FavouriteViewHol
     public void onBindViewHolder(@NonNull final FavouriteViewHolder holder, int position) {
         final FavModel favModel = mFavouriteList.get(position);
         String url = mContext.getResources().getString(R.string.poster_url) + favModel.getPosterPath();
-
+        holder.image_thumbnail.setTransitionName("movie_pic");
         Picasso.get().load(url).into(holder.image_thumbnail);
         holder.image_Card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, FavouriteActivity.class);
-                intent.putExtra("title", favModel.getOriginalTitle());
-                intent.putExtra("backdrop", favModel.getBackdropPath());
-                intent.putExtra("overview", favModel.getOverview());
-                intent.putExtra("releasedate", favModel.getReleaseDate());
-                intent.putExtra("vote", favModel.getVoteAverage());
-                intent.putExtra("liked", favModel.isFavourite());
-                intent.putExtra("movieid", favModel.getMovieid());
-                intent.putExtra("movie_poster", favModel.getPosterPath());
-                mContext.startActivity(intent);
+                favItemClickListener.onFavItemClick(holder.getAdapterPosition(), favModel, holder.image_thumbnail);
+
+
+
+//                Intent intent = new Intent(mContext, FavouriteActivity.class);
+//                intent.putExtra("title", favModel.getOriginalTitle());
+//                intent.putExtra("backdrop", favModel.getBackdropPath());
+//                intent.putExtra("overview", favModel.getOverview());
+//                intent.putExtra("releasedate", favModel.getReleaseDate());
+//                intent.putExtra("vote", favModel.getVoteAverage());
+//                intent.putExtra("liked", favModel.isFavourite());
+//                intent.putExtra("movieid", favModel.getMovieid());
+//                intent.putExtra("movie_poster", favModel.getPosterPath());
+//                mContext.startActivity(intent);
             }
         });
 

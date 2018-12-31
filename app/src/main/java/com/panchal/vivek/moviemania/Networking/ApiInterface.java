@@ -25,9 +25,9 @@ public interface ApiInterface {
     Call<MovieResponse> getMovieDetails(@Path("id") int id, @Query("api_key") String apiKey);
 
     @GET("movie/{id}/reviews")
-    Call<Reviews> getMovieReviews(@Path(value = "id", encoded = true) String id , @Query("api_key")String api_key);
+    Call<Reviews> getMovieReviews(@Path(value = "id", encoded = true) String id, @Query("api_key") String api_key);
 
     @GET("movie/{id}/videos")
-    Call<Trailer> getMovieTrailers(@Path(value = "id", encoded = true) String id , @Query("api_key")String api_key);
+    Call<Trailer> getMovieTrailers(@Path(value = "id", encoded = true) String id, @Query("api_key") String api_key);
 
 }

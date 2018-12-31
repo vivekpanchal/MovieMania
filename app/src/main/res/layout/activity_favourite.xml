@@ -51,7 +51,8 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/movie_poster"
+                android:id="@+id/movie_img"
+                android:transitionName="movie_pic"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/poster_img_description"
