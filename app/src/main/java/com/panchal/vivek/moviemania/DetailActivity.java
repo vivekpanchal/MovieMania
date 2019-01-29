@@ -3,6 +3,7 @@ package com.panchal.vivek.moviemania;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -11,7 +12,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -51,7 +54,7 @@ public class DetailActivity extends AppCompatActivity {
     Toolbar toolbar;
     @BindView(R.id.movie_overview)
     TextView overView_text;
-    @BindView(R.id.movie_poster)
+    @BindView(R.id.movie_img)
     ImageView movie_poster;
     @BindView(R.id.movie_title)
     TextView movie_title;
@@ -110,7 +113,19 @@ public class DetailActivity extends AppCompatActivity {
 
         //setting the views
         Picasso.get().load(backdrop_url).into(movie_bckgrund);
-        Picasso.get().load(poster_url).into(movie_poster);
+        Picasso.get().load(poster_url).into(movie_poster, new com.squareup.picasso.Callback() {
+            @Override
+            public void onSuccess() {
+
+                supportStartPostponedEnterTransition();
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+                supportStartPostponedEnterTransition();
+            }
+        });
 
         movie_title.setText(title);
         movie_releaseDate.setText(release_Date);
@@ -267,6 +282,17 @@ public class DetailActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                supportFinishAfterTransition();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
 

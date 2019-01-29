@@ -12,6 +12,7 @@
 
     <ImageView
         android:id="@+id/movie_img"
+        android:transitionName="movie_pic"
         style="@style/Movie_Item"
         app:srcCompat="@drawable/ic_launcher_background" />
 

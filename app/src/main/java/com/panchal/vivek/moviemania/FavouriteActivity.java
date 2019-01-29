@@ -30,7 +30,7 @@ public class FavouriteActivity extends AppCompatActivity {
     Toolbar toolbar;
     @BindView(R.id.movie_overview)
     TextView overView_text;
-    @BindView(R.id.movie_poster)
+    @BindView(R.id.movie_img)
     ImageView movie_poster;
     @BindView(R.id.movie_title)
     TextView movie_title;
@@ -73,8 +73,19 @@ public class FavouriteActivity extends AppCompatActivity {
         String poster_url = getResources().getString(R.string.poster_url) + movieposter;
         //setting the views
         Picasso.get().load(backdrop_url).into(movie_bckgrund);
-        Picasso.get().load(poster_url).into(movie_poster);
+        Picasso.get().load(poster_url).into(movie_poster, new com.squareup.picasso.Callback() {
+            @Override
+            public void onSuccess() {
 
+                supportStartPostponedEnterTransition();
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+                supportStartPostponedEnterTransition();
+            }
+        });
         movie_title.setText(movietitle);
         movie_releaseDate.setText(releasemvieDate);
         movie_rating.setText(String.valueOf(voterating));

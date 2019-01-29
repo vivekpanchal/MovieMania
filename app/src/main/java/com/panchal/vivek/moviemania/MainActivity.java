@@ -4,13 +4,17 @@ import android.app.AlertDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -19,6 +23,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.panchal.vivek.moviemania.Adapter.FavAdapter;
@@ -29,6 +35,7 @@ import com.panchal.vivek.moviemania.Model.MovieResponse;
 import com.panchal.vivek.moviemania.Networking.ApiClient;
 import com.panchal.vivek.moviemania.Networking.ApiInterface;
 import com.panchal.vivek.moviemania.ViewModel.FavouriteViewModel;
+import com.panchal.vivek.moviemania.utils.MiscUtils;
 import com.panchal.vivek.moviemania.utils.NetworkConnection;
 
 
@@ -40,7 +47,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieItemClickListener, FavAdapter.FavItemClickListener {
     @BindView(R.id.recylerView)
     RecyclerView recyclerView;
     @BindView(R.id.constraintLayout)
@@ -57,9 +64,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
+
         isConnected = NetworkConnection.getConnectivityStatus(MainActivity.this);
-        intView();
+       intView();
         setupLayoutManager();
 
         if (isConnected) {
@@ -156,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
                             movies = response.body().getResults();
                         }
 
-                        recyclerView.setAdapter(new MovieAdapter(MainActivity.this, movies));
+                        recyclerView.setAdapter(new MovieAdapter(MainActivity.this, MainActivity.this, movies));
                     } catch (NullPointerException e) {
                         Log.d(TAG, "onResponse: null pointer exception" + e);
                     }
@@ -188,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
         final int spanCount = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 4 : 2;
         layoutManager = new GridLayoutManager(this, spanCount);
         recyclerView.setLayoutManager(layoutManager);
-        favAdapter = new FavAdapter(this);
+        favAdapter = new FavAdapter(this, this);
         recyclerView.setAdapter(favAdapter);
         setUpViewModel();
     }
@@ -240,4 +249,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onMovieItemClick(int adapterPosition, Movie movie, ImageView image_thumbnail) {
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra("MovieList", movie);
+        intent.putExtra("MOVIE_TRANSITION_NAME", ViewCompat.getTransitionName(image_thumbnail));
+
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this,
+                image_thumbnail,
+                ViewCompat.getTransitionName(image_thumbnail));
+
+        startActivity(intent, options.toBundle());
+    }
+
+    @Override
+    public void onFavItemClick(int adapterPosition, FavModel favModel, ImageView image_thumbnail) {
+        Intent intent = new Intent(MainActivity.this, FavouriteActivity.class);
+                intent.putExtra("title", favModel.getOriginalTitle());
+                intent.putExtra("backdrop", favModel.getBackdropPath());
+                intent.putExtra("overview", favModel.getOverview());
+                intent.putExtra("releasedate", favModel.getReleaseDate());
+                intent.putExtra("vote", favModel.getVoteAverage());
+                intent.putExtra("liked", favModel.isFavourite());
+                intent.putExtra("movieid", favModel.getMovieid());
+                intent.putExtra("movie_poster", favModel.getPosterPath());
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this,
+                image_thumbnail,
+                ViewCompat.getTransitionName(image_thumbnail));
+                startActivity(intent, options.toBundle());
+    }
 }
