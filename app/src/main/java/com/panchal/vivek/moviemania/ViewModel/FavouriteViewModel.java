@@ -21,8 +21,14 @@ public class FavouriteViewModel extends AndroidViewModel {
         super(application);
         appDatabase = MovieDatabase.getDatabase(application);
         Log.d("viewmodel test", "retreiving data from database");
-        favourites = appDatabase.moviesDao().getAllMovies();
-        //and now our viewmodel is ready
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                favourites = appDatabase.moviesDao().getAllMovies();
+                //and now our viewmodel is ready
+            }
+        });
+
     }
 
     public LiveData<List<FavModel>> getFavourites() {

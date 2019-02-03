@@ -62,9 +62,9 @@ dependencies {
 
 
     implementation "androidx.paging:paging-runtime:$paging_version" // use -ktx for Kotlin
-
-    // alternatively - without Android dependencies for testing
-    testImplementation "androidx.paging:paging-common:$paging_version"
+//
+//    // alternatively - without Android dependencies for testing
+//    testImplementation "androidx.paging:paging-common:$paging_version"
 
     //for checking database
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.4'
