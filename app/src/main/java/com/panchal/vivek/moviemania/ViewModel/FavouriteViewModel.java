@@ -1,14 +1,13 @@
 package com.panchal.vivek.moviemania.ViewModel;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.LiveData;
-import android.support.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import com.panchal.vivek.moviemania.Database.FavModel;
 import com.panchal.vivek.moviemania.Database.MovieDatabase;
-import com.panchal.vivek.moviemania.utils.AppExecutors;
 
 import java.util.List;
 

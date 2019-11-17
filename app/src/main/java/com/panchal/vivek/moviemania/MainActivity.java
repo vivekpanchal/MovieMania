@@ -1,32 +1,31 @@
 package com.panchal.vivek.moviemania;
 
-import android.app.AlertDialog;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.os.Parcelable;
-import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.snackbar.Snackbar;
 import com.panchal.vivek.moviemania.Adapter.FavAdapter;
 import com.panchal.vivek.moviemania.Adapter.MovieAdapter;
 import com.panchal.vivek.moviemania.Database.FavModel;
@@ -35,9 +34,7 @@ import com.panchal.vivek.moviemania.Model.MovieResponse;
 import com.panchal.vivek.moviemania.Networking.ApiClient;
 import com.panchal.vivek.moviemania.Networking.ApiInterface;
 import com.panchal.vivek.moviemania.ViewModel.FavouriteViewModel;
-import com.panchal.vivek.moviemania.utils.MiscUtils;
 import com.panchal.vivek.moviemania.utils.NetworkConnection;
-
 
 import java.util.List;
 
@@ -68,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         setContentView(R.layout.activity_main);
 
         isConnected = NetworkConnection.getConnectivityStatus(MainActivity.this);
-       intView();
+        intView();
         setupLayoutManager();
 
         if (isConnected) {
@@ -266,18 +263,18 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     @Override
     public void onFavItemClick(int adapterPosition, FavModel favModel, ImageView image_thumbnail) {
         Intent intent = new Intent(MainActivity.this, FavouriteActivity.class);
-                intent.putExtra("title", favModel.getOriginalTitle());
-                intent.putExtra("backdrop", favModel.getBackdropPath());
-                intent.putExtra("overview", favModel.getOverview());
-                intent.putExtra("releasedate", favModel.getReleaseDate());
-                intent.putExtra("vote", favModel.getVoteAverage());
-                intent.putExtra("liked", favModel.isFavourite());
-                intent.putExtra("movieid", favModel.getMovieid());
-                intent.putExtra("movie_poster", favModel.getPosterPath());
+        intent.putExtra("title", favModel.getOriginalTitle());
+        intent.putExtra("backdrop", favModel.getBackdropPath());
+        intent.putExtra("overview", favModel.getOverview());
+        intent.putExtra("releasedate", favModel.getReleaseDate());
+        intent.putExtra("vote", favModel.getVoteAverage());
+        intent.putExtra("liked", favModel.isFavourite());
+        intent.putExtra("movieid", favModel.getMovieid());
+        intent.putExtra("movie_poster", favModel.getPosterPath());
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                 this,
                 image_thumbnail,
                 ViewCompat.getTransitionName(image_thumbnail));
-                startActivity(intent, options.toBundle());
+        startActivity(intent, options.toBundle());
     }
 }

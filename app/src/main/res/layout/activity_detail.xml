@@ -8,7 +8,7 @@
     android:fitsSystemWindows="true"
     tools:context=".DetailActivity">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
@@ -23,7 +23,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:id="@+id/cardView"
             android:layout_width="123dp"
             android:layout_height="161dp"
@@ -45,7 +45,7 @@
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop" />
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
         <TextView
             android:id="@+id/movie_title"
@@ -100,7 +100,7 @@
             app:layout_constraintVertical_bias="0.0" />
 
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:id="@+id/cardView2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -113,7 +113,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cardView">
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="5dp">
@@ -126,7 +126,7 @@
                     android:textAllCaps="true"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
-                <android.support.v4.widget.NestedScrollView
+                <androidx.core.widget.NestedScrollView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="8dp"
@@ -143,13 +143,13 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/overView_text"
                         app:layout_constraintVertical_bias="0.029" />
-                </android.support.v4.widget.NestedScrollView>
+                </androidx.core.widget.NestedScrollView>
 
 
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
         <TextView
             android:id="@+id/trailer_tv"
@@ -165,7 +165,7 @@
             app:layout_constraintTop_toBottomOf="@+id/cardView2"
             app:layout_constraintVertical_bias="0.0" />
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/trailer_recyclerview"
             android:layout_width="0dp"
             android:layout_height="140dp"
@@ -195,7 +195,7 @@
             tools:layout_editor_absoluteY="557dp" />
 
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/review_recycle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -208,7 +208,7 @@
             app:layout_constraintTop_toBottomOf="@id/review_tv"
             tools:listitem="@layout/review_item_list" />
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_detail"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
@@ -221,5 +221,5 @@
             app:layout_constraintTop_toTopOf="parent" />
 
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
