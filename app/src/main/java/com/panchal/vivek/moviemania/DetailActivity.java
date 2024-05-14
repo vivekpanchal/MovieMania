@@ -137,26 +137,23 @@ public class DetailActivity extends AppCompatActivity {
         loadReviews(String.valueOf(movie_id));
 
 
-        likeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        likeButton.setOnClickListener(v -> {
 
-                if (isFavourite) {
-                    removeMovieFromList();
-                    isFavourite = false;
-                    likeButton.setLiked(false);
-                    Snackbar snackbar = Snackbar.make(view, "removed to favourite", Snackbar.LENGTH_SHORT);
-                    snackbar.show();
-                } else {
-                    addToMovieList();
-                    isFavourite = true;
-                    likeButton.setLiked(true);
-                    Snackbar snackbar = Snackbar.make(view, "added to favourite", Snackbar.LENGTH_SHORT);
-                    snackbar.show();
-                }
-
-
+            if (isFavourite) {
+                removeMovieFromList();
+                isFavourite = false;
+                likeButton.setLiked(false);
+                Snackbar snackbar = Snackbar.make(view, "removed to favourite", Snackbar.LENGTH_SHORT);
+                snackbar.show();
+            } else {
+                addToMovieList();
+                isFavourite = true;
+                likeButton.setLiked(true);
+                Snackbar snackbar = Snackbar.make(view, "added to favourite", Snackbar.LENGTH_SHORT);
+                snackbar.show();
             }
+
+
         });
 
 
@@ -247,13 +244,10 @@ public class DetailActivity extends AppCompatActivity {
 
         final FavModel favModel = new FavModel(id, favRating, favTitle, favPoster, backdropPath, fav_overview, favReleasedate, true);
 
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                if (favModel.isFavourite()) {
-                    movieDatabase.moviesDao().insertMovie(favModel);
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            if (favModel.isFavourite()) {
+                movieDatabase.moviesDao().insertMovie(favModel);
 
-                }
             }
         });
     }
@@ -267,19 +261,16 @@ public class DetailActivity extends AppCompatActivity {
 
         final FavModel[] movieResponse = new FavModel[1];
 
-        AppExecutors.getInstance().mainThread().execute(new Runnable() {
-            @Override
-            public void run() {
-                movieResponse[0] = movieDatabase.moviesDao().checkifExists(movieId);
-                //If the movie belongs to user favourites then it will be shown as liked
-                if (movieResponse[0] != null) {
-                    likeButton.setLiked(movieResponse[0].isFavourite());
-                    isFavourite = true;
+        AppExecutors.getInstance().mainThread().execute(() -> {
+            movieResponse[0] = movieDatabase.moviesDao().checkifExists(movieId);
+            //If the movie belongs to user favourites then it will be shown as liked
+            if (movieResponse[0] != null) {
+                likeButton.setLiked(movieResponse[0].isFavourite());
+                isFavourite = true;
 
-                } else {
-                    likeButton.setLiked(false);
-                    isFavourite = false;
-                }
+            } else {
+                likeButton.setLiked(false);
+                isFavourite = false;
             }
         });
     }
