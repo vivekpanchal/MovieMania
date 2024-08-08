@@ -1,13 +1,3 @@
 <resources>
     <string name="app_name">MovieMania</string>
-    <string name="poster_url">http://image.tmdb.org/t/p/w500/</string>
-    <string name="backdrop_url">http://image.tmdb.org/t/p/w780/</string>
-    <string name="trailers_textview">Trailers :</string>
-    <string name="reviews_tv">Reviews :</string>
-    <string name="Review_description">Reviews of movies</string>
-    <string name="review_content_tv">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis elit quam, dapibus vitae urna non, pretium pulvinar nisl. Maecenas sit amet est id ex elementum tempus ac hendrerit tellus. Duis at dui lorem. Sed tincidunt risus vitae imperdiet lobortis. Curabitur ut urna lacus. Mauris finibus, lectus vel posuere aliquet, ipsum libero commodo erat, eget interdum purus sapien ac turpis. Sed turpis velit, ullamcorper et dolor ac, vehicula viverra tortor. Nam convallis elementum congue. Vestibulum id lacinia purus.</string>
-    <string name="author_name">vivek panchal</string>
-    <string name="overview_tv">OverView</string>
-    <string name="poster_img_description">image View of movie poster</string>
-
 </resources>
