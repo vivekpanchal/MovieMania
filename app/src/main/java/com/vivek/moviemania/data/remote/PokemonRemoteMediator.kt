@@ -1,10 +1,10 @@
-package com.vivek.pokidex.data.remote
+package com.vivek.moviemania.data.remote
 
 import androidx.paging.*
 import androidx.room.withTransaction
-import com.vivek.pokidex.data.local.AppDatabase
-import com.vivek.pokidex.data.local.entity.PokemonEntity
-import com.vivek.pokidex.data.remote.models.toEntity
+import com.vivek.moviemania.data.local.AppDatabase
+import com.vivek.moviemania.data.local.entity.PokemonEntity
+import com.vivek.moviemania.data.remote.models.toEntity
 import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException

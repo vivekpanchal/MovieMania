@@ -1,7 +1,7 @@
-package com.vivek.pokidex.data.remote.models
+package com.vivek.moviemania.data.remote.models
 
-import com.vivek.pokidex.data.local.entity.PokemonEntity
-import com.vivek.pokidex.domain.model.Pokemon
+import com.vivek.moviemania.data.local.entity.PokemonEntity
+import com.vivek.moviemania.domain.model.Pokemon
 
 
 fun PokemonDTO.toEntity(page: Int): PokemonEntity {

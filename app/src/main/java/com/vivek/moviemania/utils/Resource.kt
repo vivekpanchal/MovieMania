@@ -1,4 +1,4 @@
-package com.vivek.pokidex.utils
+package com.vivek.moviemania.utils
 
 // utils/Resource.kt
 sealed class Resource<T>(

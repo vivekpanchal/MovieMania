@@ -1,6 +1,6 @@
-package com.vivek.pokidex.data.remote
+package com.vivek.moviemania.data.remote
 
-import com.vivek.pokidex.data.remote.models.PokemonResponse
+import com.vivek.moviemania.data.remote.models.PokemonResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

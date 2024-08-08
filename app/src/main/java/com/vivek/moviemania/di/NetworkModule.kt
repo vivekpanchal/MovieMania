@@ -1,19 +1,16 @@
-package com.vivek.pokidex.di
+package com.vivek.moviemania.di
 
-import android.content.SharedPreferences
 import com.squareup.moshi.Moshi
-import com.vivek.pokidex.data.remote.ApiService
-import com.vivek.pokidex.data.remote.Endpoints
+import com.vivek.moviemania.data.remote.ApiService
+import com.vivek.moviemania.data.remote.Endpoints
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import java.io.File
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 

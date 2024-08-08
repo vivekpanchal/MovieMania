@@ -1,8 +1,7 @@
-package com.vivek.pokidex.domain.repository
+package com.vivek.moviemania.domain.repository
 
-import androidx.paging.PagingData
-import com.vivek.pokidex.domain.model.Pokemon
-import com.vivek.pokidex.utils.Resource
+import com.vivek.moviemania.domain.model.Pokemon
+import com.vivek.moviemania.utils.Resource
 import kotlinx.coroutines.flow.Flow
 
 

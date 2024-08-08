@@ -1,14 +1,14 @@
-package com.vivek.pokidex.data.local.converters
+package com.vivek.moviemania.data.local.converters
 
 import androidx.room.TypeConverter
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import com.vivek.pokidex.data.remote.models.Ability
-import com.vivek.pokidex.data.remote.models.Attack
-import com.vivek.pokidex.data.remote.models.Resistance
-import com.vivek.pokidex.data.remote.models.Weakness
+import com.vivek.moviemania.data.remote.models.Ability
+import com.vivek.moviemania.data.remote.models.Attack
+import com.vivek.moviemania.data.remote.models.Resistance
+import com.vivek.moviemania.data.remote.models.Weakness
 
 class Converters {
 

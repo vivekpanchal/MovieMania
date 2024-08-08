@@ -1,4 +1,4 @@
-package com.vivek.pokidex.data.remote
+package com.vivek.moviemania.data.remote
 
 object Endpoints {
 

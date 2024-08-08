@@ -1,7 +1,7 @@
-package com.vivek.pokidex.di
+package com.vivek.moviemania.di
 
-import com.vivek.pokidex.data.repository.PokemonRepositoryIml
-import com.vivek.pokidex.domain.repository.PokemonRepository
+import com.vivek.moviemania.data.repository.PokemonRepositoryIml
+import com.vivek.moviemania.domain.repository.PokemonRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

@@ -1,10 +1,10 @@
-package com.vivek.pokidex.domain.model
+package com.vivek.moviemania.domain.model
 
-import com.vivek.pokidex.data.remote.models.Ability
-import com.vivek.pokidex.data.remote.models.Attack
-import com.vivek.pokidex.data.remote.models.ImagesDTO
-import com.vivek.pokidex.data.remote.models.Resistance
-import com.vivek.pokidex.data.remote.models.Weakness
+import com.vivek.moviemania.data.remote.models.Ability
+import com.vivek.moviemania.data.remote.models.Attack
+import com.vivek.moviemania.data.remote.models.ImagesDTO
+import com.vivek.moviemania.data.remote.models.Resistance
+import com.vivek.moviemania.data.remote.models.Weakness
 
 data class Pokemon(
     val id: String,

@@ -1,4 +1,4 @@
-package com.vivek.pokidex.data.remote.models
+package com.vivek.moviemania.data.remote.models
 
 import com.squareup.moshi.JsonClass
 

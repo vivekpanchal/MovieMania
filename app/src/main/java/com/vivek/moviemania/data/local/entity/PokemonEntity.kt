@@ -1,11 +1,11 @@
-package com.vivek.pokidex.data.local.entity
+package com.vivek.moviemania.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.vivek.pokidex.data.remote.models.Ability
-import com.vivek.pokidex.data.remote.models.Attack
-import com.vivek.pokidex.data.remote.models.Resistance
-import com.vivek.pokidex.data.remote.models.Weakness
+import com.vivek.moviemania.data.remote.models.Ability
+import com.vivek.moviemania.data.remote.models.Attack
+import com.vivek.moviemania.data.remote.models.Resistance
+import com.vivek.moviemania.data.remote.models.Weakness
 
 @Entity(tableName = "pokemon")
 data class PokemonEntity(

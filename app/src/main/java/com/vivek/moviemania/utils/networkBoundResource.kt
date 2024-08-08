@@ -1,4 +1,4 @@
-package com.vivek.pokidex.utils
+package com.vivek.moviemania.utils
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll

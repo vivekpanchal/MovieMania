@@ -1,15 +1,12 @@
-package com.vivek.pokidex.di
+package com.vivek.moviemania.di
 
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
-import com.squareup.moshi.Moshi
-import com.vivek.pokidex.R
-import com.vivek.pokidex.data.local.AppDatabase
-import com.vivek.pokidex.data.local.dao.PokemonDao
-import com.vivek.pokidex.data.remote.ApiService
-import com.vivek.pokidex.data.remote.Endpoints
+import com.vivek.moviemania.R
+import com.vivek.moviemania.data.local.AppDatabase
+import com.vivek.moviemania.data.local.dao.PokemonDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,7 +14,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import java.io.File
 import javax.inject.Singleton
 
 

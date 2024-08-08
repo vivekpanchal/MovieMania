@@ -1,11 +1,10 @@
-package com.vivek.pokidex.data.local.dao
+package com.vivek.moviemania.data.local.dao
 
-import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.vivek.pokidex.data.local.entity.PokemonEntity
+import com.vivek.moviemania.data.local.entity.PokemonEntity
 import kotlinx.coroutines.flow.Flow
 
 
